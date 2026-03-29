@@ -1,0 +1,17 @@
+#spring:
+#  config:
+#    import: "optional:configserver:http://localhost:8888"  # o sin 'optional:' si quieres que falle si no hay server
+#
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+
+jwt:
+  secret: my-secret-key-for-jwt-generation-mitocode-123456789012345
+  expiration: 30s
+  refresh-expiration: 7d

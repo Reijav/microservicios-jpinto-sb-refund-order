@@ -1,0 +1,151 @@
+services:
+
+  api-order-orchestrator-service-v1-1:
+    build:
+      context: ../api-order-orchestrator-service-v1
+      dockerfile: Dockerfile
+    container_name: api-order-orchestrator-service-v1-1
+    ports:
+      - "50105:50100"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-order-service-v1-1:
+    build:
+      context: ../api-order-service-v1
+      dockerfile: Dockerfile
+    container_name: api-order-service-v1-1
+    ports:
+      - "50015:50010"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-payment-service-v1-1:
+    build:
+      context: ../api-payment-service-v1
+      dockerfile: Dockerfile
+    container_name: api-payment-service-v1-1
+    ports:
+      - "50025:50020"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-payment-service-v1-2:
+    build:
+      context: ../api-payment-service-v1
+      dockerfile: Dockerfile
+    container_name: api-payment-service-v1-2
+    ports:
+      - "50026:50020"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-payment-service-v1-3:
+    build:
+      context: ../api-payment-service-v1
+      dockerfile: Dockerfile
+    container_name: api-payment-service-v1-3
+    ports:
+      - "50027:50020"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-payment-service-v1-4:
+    build:
+      context: ../api-payment-service-v1
+      dockerfile: Dockerfile
+    container_name: api-payment-service-v1-4
+    ports:
+      - "50028:50020"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-payment-service-v2-1:
+    build:
+      context: ../api-payment-service-v2
+      dockerfile: Dockerfile
+    container_name: api-payment-service-v2-1
+    ports:
+      - "50055:50050"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-delivery-service-v1-1:
+    build:
+      context: ../api-delivery-service-v1
+      dockerfile: Dockerfile
+    container_name: api-delivery-service-v1-1
+    ports:
+      - "50045:50040"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-restaurant-service-v1-1:
+    build:
+      context: ../api-restaurant-service-v1
+      dockerfile: Dockerfile
+    container_name: api-restaurant-service-v1-1
+    ports:
+      - "50035:50030"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-restaurant-service-v2-1:
+    build:
+      context: ../api-restaurant-service-v2
+      dockerfile: Dockerfile
+    container_name: api-restaurant-service-v2-1
+    ports:
+      - "50065:50060"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-order-query-service-v1-1:
+    build:
+      context: ../api-order-query-service-v1
+      dockerfile: Dockerfile
+    container_name: api-order-query-service-v1-1
+    ports:
+      - "50075:50070"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+  api-auth-service-v1-1:
+    build:
+      context: ../api-auth-service-v1
+      dockerfile: Dockerfile
+    container_name: api-auth-service-v1-1
+    ports:
+      - "50300:50300"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - ms-network
+
+#crear el network de forma manual
+#docker network create ms-network
+networks:
+  ms-network:
+    external: true

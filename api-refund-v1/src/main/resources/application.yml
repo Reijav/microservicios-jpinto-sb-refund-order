@@ -1,0 +1,29 @@
+server:
+  port: 50000
+  servlet:
+    context-path: /api-refunds
+spring:
+  profiles:
+    active: dev
+  application:
+    name: api-refund-v1
+  datasource:
+    url: jdbc:postgresql://localhost:51004/refunddb
+    username: ${DB_USERNAME:refunduser}
+    password: ${DB_PASSWORD:refundpass}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+logging:
+  level:
+    com.jpinto.refund: DEBUG
+    org.springframework.web: INFO

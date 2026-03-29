@@ -1,0 +1,49 @@
+# Configuración para el perfil "oauth2-github"
+#
+# IMPORTANTE: en producción estas credenciales NO deben estar en el repositorio.
+# Moverlas al Config Server con cifrado, a Vault, o como variables de entorno:
+#   SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_SECRET=<valor>
+#
+# ─────────────────────────────────────────────────────────────────────────────
+# PROBLEMA CON CONTEXT PATH
+# ─────────────────────────────────────────────────────────────────────────────
+# Si el servicio tiene server.servlet.context-path configurado (ej: /api/v1/auth),
+# Spring Security incluye ese path en la URL de callback que envía a GitHub.
+# {baseUrl} en el template de redirect-uri = scheme + host + port + context-path
+#
+# Con context-path=/api/v1/auth y puerto=50300 las URLs son:
+#   Inicio del flujo: http://localhost:50300/api/v1/auth/oauth2/authorization/github
+#   Callback URL:     http://localhost:50300/api/v1/auth/login/oauth2/code/github
+#
+# En la GitHub OAuth App (https://github.com/settings/developers) debes tener:
+#   Homepage URL:               http://localhost:50300
+#   Authorization callback URL: http://localhost:50300/api/v1/auth/login/oauth2/code/github
+#                                                      ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+#                                              context-path incluido aquí
+#
+# Si registraste la URL sin el context-path → GitHub retorna 400 (redirect_uri mismatch).
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# Para activar este perfil cambiar en application.yml:
+#   spring.profiles.active: dev, oauth2-github
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            client-id: Ov23liOBDeWf6xzVrnQk
+            client-secret: b378e2fe84f099fee179120d05369381dcaff976
+            # Scopes que se solicitan a GitHub:
+            #   read:user  → datos básicos del perfil (login, name, avatar_url)
+            #   user:email → dirección de email del usuario
+            scope:
+              - read:user
+              - user:email
+            # redirect-uri explícito para que sea visible qué URL se envía a GitHub.
+            # {baseUrl} se expande a: scheme://host:port/context-path
+            # {registrationId} se expande a: github
+            # Resultado con context-path=/api/v1/auth:
+            #   http://localhost:50300/api/v1/auth/login/oauth2/code/github
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"

@@ -1,0 +1,264 @@
+#Instalar docker y docker-compose
+#Crear network
+#docker network create ms-trabajo-final-jpinto
+#Levantar servicios core con el siguiente comando, solo si estamos en la raiz del proyecto:
+# docker-compose --file docker/infra-compose.yml --profile core up
+
+#Levantar servicios si estoy dentro de la carpeta docker
+# docker-compose --profile core --file infra-compose.yml up
+
+#Depende la version de docker-compose que tengas instalado, puede que necesites usar "docker compose" en lugar de "docker-compose"
+
+services:
+  postgres-auth-v1:
+    profiles: ["core"]
+    image: postgres:15
+    container_name: postgres-auth-v1
+    restart: always
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    ports:
+      - "51001:5432"
+    volumes:
+      - api-auth-service-v1-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+  postgres-accounting-v1:
+    profiles: ["core"]
+    image: postgres:15
+    container_name: postgres-order-v1
+    restart: always
+    environment:
+      POSTGRES_DB: accountingdb
+      POSTGRES_USER: accountinguser
+      POSTGRES_PASSWORD: accountingpass
+    ports:
+      - "51002:5432"
+    volumes:
+      - api-accounting-service-v1-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+  postgres-payment-v1:
+    profiles: ["core"]
+    image: postgres:15
+    container_name: postgres-payment-v1
+    restart: always
+    environment:
+      POSTGRES_DB: paymentdb
+      POSTGRES_USER: paymentuser
+      POSTGRES_PASSWORD: paymentpass
+    ports:
+      - "51003:5432"
+    volumes:
+      - api-payment-service-v1-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+  postgres-refund-v1:
+    profiles: ["core"]
+    image: postgres:15
+    container_name: postgres-payment-v2
+    restart: always
+    environment:
+      POSTGRES_DB: refunddb
+      POSTGRES_USER: refunduser
+      POSTGRES_PASSWORD: refundpass
+    ports:
+      - "51004:5432"
+    volumes:
+      - api-refund-service-v1-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+  postgres-talent-human-v1:
+    profiles: ["core"]
+    image: postgres:15
+    container_name: postgres-talenthuman-v1
+    restart: always
+    environment:
+      POSTGRES_DB: talenthumandb
+      POSTGRES_USER: talenthumanuser
+      POSTGRES_PASSWORD: talenthumandbpass
+    ports:
+      - "51005:5432"
+    volumes:
+      - api-talent-human-service-v1-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+
+  api-config-server-v1:
+    profiles: ["nouse"]
+    build:
+      context: ../api-config-server-v1
+      dockerfile: Dockerfile
+    container_name: api-config-server-v1
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING_PROFILES_ACTIVE=config-server
+    networks:
+      - ms-trabajo-final-jpinto
+
+  api-eureka-server-v1:
+    profiles: ["core"]
+    build:
+      context: ../api-eureka-server-v1
+      dockerfile: Dockerfile
+    container_name: api-eureka-server-v1
+    ports:
+      - "8761:8761"
+    networks:
+      - ms-trabajo-final-jpinto
+
+  zookeeper:
+    profiles: ["nouse"]
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - ms-trabajo-final-jpinto
+
+  kafka:
+    profiles: ["nouse"]
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_LISTENERS: CLIENT://:9092,EXTERNAL://:9093
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: CLIENT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    networks:
+      - ms-trabajo-final-jpinto
+
+  mongodb_order_read:
+    profiles: ["nouse"]
+    image: mongo:7.0  # puedes usar otra versión si quieres
+    container_name: mongodb_order_read
+    ports:
+      - "51070:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+      MONGO_INITDB_DATABASE: order_read
+    volumes:
+      - mongo_order_read_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - ms-trabajo-final-jpinto
+
+  prometheus:
+    profiles: ["nouse"]
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - ms-trabajo-final-jpinto
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    profiles: ["nouse"]
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - ms-trabajo-final-jpinto
+#Levantar un servicio especifico de todo el compose
+#docker-compose --file docker/infra-compose.yml --profile core up jaeger
+#docker compose -f docker/infra-compose.yml -p docker up -d jaeger
+  jaeger:
+    profiles: ["nouse"]
+    image: jaegertracing/all-in-one:1.53
+    container_name: jaeger
+    ports:
+      - "16686:16686"  # UI Web
+      - "6831:6831/udp" # UDP para recibir trazas
+      - "4318:4318"
+      - "4317:4317"
+    environment:
+      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
+    networks:
+      - ms-trabajo-final-jpinto
+
+  keycloak:
+    profiles: ["nouse"]
+    image: quay.io/keycloak/keycloak:21.1.1
+    container_name: keycloak
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    command: start-dev
+    ports:
+      - "52020:8080"
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+    restart: unless-stopped
+    networks:
+      - ms-trabajo-final-jpinto
+
+  portainer:
+    profiles: ["core"]
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+  redis:
+    profiles: ["nouse"]
+    image: redis:7.2
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ms-trabajo-final-jpinto
+
+
+volumes:
+  api-auth-service-v1-db-data:
+  api-accounting-service-v1-db-data:
+  api-payment-service-v1-db-data:
+  api-refund-service-v1-db-data:
+  api-talent-human-service-v1-db-data:
+  mongo_order_read_data:
+  kafka-data:
+  prometheus_data:
+  grafana_data:
+  keycloak_data:
+  portainer_data:
+  redis_data:
+
+#crear el network de forma manual
+#docker network create ms-trabajo-final-jpinto
+networks:
+  ms-trabajo-final-jpinto:
+#    external: true

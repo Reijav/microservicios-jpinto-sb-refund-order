@@ -1,0 +1,59 @@
+global:
+  scrape_interval: 5s  # frecuencia de recolección (por defecto es 1m)
+
+scrape_configs:
+  - job_name: 'order-orchestrator-service-v1'
+    metrics_path: '/api/v1/order-orchestrator/actuator/prometheus'
+    static_configs:
+      #- targets: ['order-orchestrator-service-v1:50100']
+      - targets: ['host.docker.internal:50100'] # Usamos host.docker.internal para acceder al servicio desde el contenedor de Prometheus
+        labels:
+          application: 'order-orchestrator-service-v1'
+          namespace: 'dev'
+
+  - job_name: 'api-order-service-v1'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50010']
+
+  - job_name: 'api-payment-service-v1'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50020']
+
+  - job_name: 'api-payment-service-v2'
+    metrics_path: '/api/v2/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50030']
+
+  - job_name: 'api-restaurant-service-v1'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50040']
+        labels:
+          application: 'api-restaurant-service-v1'
+          namespace: 'dev'
+
+  - job_name: 'api-restaurant-service-v2'
+    metrics_path: '/api/v2/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50050']
+        labels:
+          application: 'api-restaurant-service-v2'
+          namespace: 'dev'
+
+  - job_name: 'api-delivery-service-v1'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50060']
+        labels:
+          application: 'api-delivery-service-v1'
+          namespace: 'dev'
+
+  - job_name: 'api-order-query-service-v1'
+    metrics_path: '/api/v1/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:50070']
+        labels:
+          application: 'api-order-query-service-v1'
+          namespace: 'dev'

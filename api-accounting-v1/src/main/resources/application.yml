@@ -1,0 +1,22 @@
+server:
+  port: 50001
+  servlet:
+    context-path: /api-accounting
+spring:
+  application:
+    name: api-accounting-v1
+  profiles:
+    active: dev
+  datasource:
+    url: jdbc:postgresql://localhost:51002/accountingdb
+    username: accountinguser
+    password: accountingpass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true

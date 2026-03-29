@@ -1,0 +1,9 @@
+server:
+  port: 51100
+  servlet:
+    context-path: /api-orchestator-refund
+spring:
+  application:
+    name: api-orchestator-refund-v1
+  profiles:
+    active: dev

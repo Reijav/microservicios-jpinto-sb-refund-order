@@ -1,0 +1,9 @@
+server:
+  port: 50006
+  servlet:
+    context-path: /api-notification
+spring:
+  application:
+    name: api-notification-v1
+  profiles:
+    active: dev

@@ -1,0 +1,23 @@
+http-clients:
+  internal:
+    api-refund-v1:
+      base-url: http://api-refund-v1/api-refunds
+      timeout: 5s
+    api-talenthuman-v1:
+      base-url: http://api-talent-human-v1/api-talent-human
+      timeout: 5s
+    api-payment-v1:
+      base-url: http://api-payment-v1/api-payment
+      timeout: 5s
+    api-notification-v1:
+      base-url: http://api-notification-v1/api-notification
+      timeout: 5s
+    api-accounting-v1:
+      base-url: http://api-accounting-v1/api-accounting
+      timeout: 5s
+#  external:
+#    api-visa-v1:
+#      base-url: http://localhost:52010/api/visa
+#      timeout: 5s
+
+
