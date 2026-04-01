@@ -32,5 +32,11 @@ public class OrderRefundOrchestetorController {
         return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
     }
 
-
+//    @PutMapping("/reject")
+//    public ApprovedRefundResponse rejectOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
+//        if(Objects.isNull(approveRefundRequest.orderRefundId())){
+//            throw new RuntimeException("Error. id orden no válido");
+//        }
+//        return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
+//    }
 }

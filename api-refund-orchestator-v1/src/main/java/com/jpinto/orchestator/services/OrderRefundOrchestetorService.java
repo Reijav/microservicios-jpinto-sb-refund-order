@@ -20,7 +20,7 @@ public class OrderRefundOrchestetorService {
     public RefundOrderResponse createOrderRefund(CreateOrderRefundRequest request){
         var employee=talentHumanService.findById(request.getEmployeeId());
         var supervisor= talentHumanService.findById(employee.getInmediateSupervisorId());
-        var response= orderRefundService.create(new CreateRefundOrderRequest(request.getEmployeeId(), supervisor.getId(), request.getMotiveId(), request.getBills()));
+        var response= orderRefundService.create(new CreateRefundOrderRequest(request.getEmployeeId(), employee.getFullName(), supervisor.getId(), supervisor.getFullName(), request.getMotiveId(), request.getBills()));
         notificationService.encolarEnvioHtmlMail(RequestSendMail.builder()
                         .subjet("Nueva orden de reembolso por revisar")
                         .ccEmail(List.of(supervisor.getEmail()))

@@ -1,5 +1,6 @@
 package com.jpinto.orchestator.exceptions;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -69,6 +70,15 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Bad Request");
         problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(CallNotPermittedException.class)
+    public ProblemDetail handleCallNotPermittedException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
+        problem.setTitle("Servicio no disponible");
+        problem.setDetail("Servicio no disponible, intente más tarde.");
         return problem;
     }
 

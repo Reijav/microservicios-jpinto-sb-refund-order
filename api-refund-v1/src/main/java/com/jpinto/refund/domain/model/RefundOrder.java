@@ -13,16 +13,18 @@ public class RefundOrder {
 
     private final UUID id;
     private final Long employeeId;
+    private final String employeeName;
     private final LocalDate dateOrder;
     private final Long motiveId;
     private BigDecimal totalValue;
     private Long approverId;
+    private final String approverName;
     private RefundState state;
     private String paymentId;
     private final List<RefundBill> bills;
 
     // Factory method for creating new refund orders
-    public static RefundOrder create(Long employeeId, Long supervisorId, Long motiveId, List<RefundBill> bills) {
+    public static RefundOrder create(Long employeeId, String employeeName,  Long supervisorId,String supervisorName, Long motiveId, List<RefundBill> bills) {
         if (employeeId == null) throw new IllegalArgumentException("employeeId must not be null");
         if (supervisorId == null) throw new IllegalArgumentException("supervisorId must not be null");
         if (motiveId == null) throw new IllegalArgumentException("motiveId must not be null");
@@ -32,20 +34,22 @@ public class RefundOrder {
                 .map(RefundBill::getValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return new RefundOrder(UUID.randomUUID(), employeeId, LocalDate.now(),
-                motiveId, total, supervisorId, RefundState.CREATED, null, new ArrayList<>(bills));
+        return new RefundOrder(UUID.randomUUID(), employeeId,employeeName,  LocalDate.now(),
+                motiveId, total, supervisorId,supervisorName, RefundState.CREATED, null, new ArrayList<>(bills));
     }
 
     // Full constructor for reconstitution from persistence
-    public RefundOrder(UUID id, Long employeeId, LocalDate dateOrder, Long motiveId,
-                       BigDecimal totalValue, Long approverId, RefundState state,
+    public RefundOrder(UUID id, Long employeeId, String employeeName, LocalDate dateOrder, Long motiveId,
+                       BigDecimal totalValue, Long approverId,String approverName, RefundState state,
                        String paymentId, List<RefundBill> bills) {
         this.id = id;
         this.employeeId = employeeId;
+        this.employeeName=employeeName;
         this.dateOrder = dateOrder;
         this.motiveId = motiveId;
         this.totalValue = totalValue;
         this.approverId = approverId;
+        this.approverName=approverName;
         this.state = state;
         this.paymentId = paymentId;
         this.bills = bills != null ? new ArrayList<>(bills) : new ArrayList<>();
@@ -113,5 +117,14 @@ public class RefundOrder {
     public Long getApproverId() { return approverId; }
     public RefundState getState() { return state; }
     public String getPaymentId() { return paymentId; }
+
+    public String getEmployeeName() {
+        return employeeName;
+    }
+
+    public String getApproverName() {
+        return approverName;
+    }
+
     public List<RefundBill> getBills() { return Collections.unmodifiableList(bills); }
 }

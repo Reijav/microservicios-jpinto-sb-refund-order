@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Random;
+import java.util.random.RandomGenerator;
+
 @RestController
 @RequestMapping("/email")
 @Slf4j
@@ -17,6 +20,11 @@ public class EmailController {
     public ResponseEntity<Boolean> encolarEnvioHtmlMail(@RequestBody RequestSendMail request) {
         log.info(" {} Recibiendo peticion encolar-envio-mail ", Thread.currentThread());
         log.info("Mail enviado {}", request);
+
+        var valor=Math.abs( RandomGenerator.getDefault().nextInt() % 100);
+        if(valor > 50){
+            throw new RuntimeException("Error enviando mail");
+        }
         return ResponseEntity.ok(Boolean.TRUE);
     }
 

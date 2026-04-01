@@ -1,0 +1,10 @@
+server:
+  port: 50008
+  servlet:
+    context-path: /api-refundquery-v1
+spring:
+  profiles:
+    active: dev
+  application:
+    name: api-refundquery-v1
+

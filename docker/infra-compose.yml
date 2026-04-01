@@ -116,7 +116,7 @@ services:
       - ms-trabajo-final-jpinto
 
   zookeeper:
-    profiles: ["nouse"]
+    profiles: ["core"]
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -127,7 +127,7 @@ services:
       - ms-trabajo-final-jpinto
 
   kafka:
-    profiles: ["nouse"]
+    profiles: ["core"]
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
     depends_on:
@@ -137,7 +137,7 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
       KAFKA_LISTENERS: CLIENT://:9092,EXTERNAL://:9093
-      KAFKA_ADVERTISED_LISTENERS: CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: CLIENT://localhost:9092,EXTERNAL://localhost:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: CLIENT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
@@ -147,7 +147,7 @@ services:
       - ms-trabajo-final-jpinto
 
   mongodb_order_read:
-    profiles: ["nouse"]
+    profiles: ["core"]
     image: mongo:7.0  # puedes usar otra versión si quieres
     container_name: mongodb_order_read
     ports:

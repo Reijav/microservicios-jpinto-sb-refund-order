@@ -13,6 +13,7 @@ public class NotificationRestClientService {
     private final RestClient notificationRestClient;
 
     public Boolean encolarEnvioHtmlMail( RequestSendMail request) {
+        log.info("Calling send mail.");
         return notificationRestClient.post().uri("/email/encolar-envio-mail").body(request)
                 .retrieve()
                 .body(Boolean.class);

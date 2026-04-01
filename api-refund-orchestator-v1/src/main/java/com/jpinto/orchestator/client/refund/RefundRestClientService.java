@@ -2,6 +2,7 @@ package com.jpinto.orchestator.client.refund;
 
 import com.jpinto.orchestator.client.refund.dto.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +12,13 @@ import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RefundRestClientService {
 
     private final RestClient refundRestClient;
 
     public RefundOrderResponse create(CreateRefundOrderRequest request) {
-
+        log.info("Calling create order refund.");
         return refundRestClient.post().
                 uri("/refund-orders").
                 body(request).
@@ -25,6 +27,7 @@ public class RefundRestClientService {
     }
 
     public RefundOrderResponse getById(UUID id) {
+        log.info("Calling get order refund by id.");
         return refundRestClient.get().uri("/refund-orders/{id}", id.toString())
                 .retrieve()
                 .body(RefundOrderResponse.class);
@@ -32,15 +35,14 @@ public class RefundRestClientService {
 
 
     public RefundOrderResponse getByPaymentId(@PathVariable String paymentId){
+        log.info("Calling get order refund by payment id.");
         return refundRestClient.get().uri("/refund-orders/get-by-paymentid/{paymentId}", paymentId)
                 .retrieve()
                 .body(RefundOrderResponse.class);
     }
 
-
-    // ─── STATE TRANSITIONS ───────────────────────────────────────────────────
-
     public RefundOrderResponse approve( UUID id,  ApproveRefundRequest request) {
+        log.info("Calling approve order.");
         return refundRestClient.put().
                 uri("/refund-orders/{id}/approve", id).
                 body(request).
@@ -48,8 +50,9 @@ public class RefundRestClientService {
 
     }
 
-   // @PatchMapping("/{id}/reject")
+
     public RefundOrderResponse reject( UUID id,ApproveRefundRequest request) {
+        log.info("Calling reject order refund.");
         return refundRestClient.put().
                 uri("/refund-orders/{id}/reject", id).
                 body(request).
@@ -59,6 +62,7 @@ public class RefundRestClientService {
 
 
     public RefundOrderResponse generatePaymentOrder(UUID id, MarkAsPayedRequest request) {
+        log.info("Calling generate payment order.");
         return refundRestClient.put().
                 uri("/refund-orders/{id}/generate-payment-order", id).
                 body(request).

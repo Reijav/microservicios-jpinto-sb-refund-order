@@ -8,6 +8,7 @@ import com.jpinto.refund.application.port.in.CreateRefundOrderUseCase;
 import com.jpinto.refund.domain.model.RefundBill;
 import com.jpinto.refund.domain.model.RefundOrder;
 import com.jpinto.refund.domain.repository.RefundOrderRepository;
+import com.jpinto.refund.producer.order.created.OrderRefundCreatedProducer;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,9 +19,11 @@ import java.util.List;
 public class CreateRefundOrderService implements CreateRefundOrderUseCase {
 
     private final RefundOrderRepository refundOrderRepository;
+    private final OrderRefundCreatedProducer orderRefundCreatedProducer;
 
-    public CreateRefundOrderService(RefundOrderRepository refundOrderRepository) {
+    public CreateRefundOrderService(RefundOrderRepository refundOrderRepository, OrderRefundCreatedProducer orderRefundCreatedProducer) {
         this.refundOrderRepository = refundOrderRepository;
+        this.orderRefundCreatedProducer=orderRefundCreatedProducer;
     }
 
     @Override
@@ -29,8 +32,10 @@ public class CreateRefundOrderService implements CreateRefundOrderUseCase {
                 .map(this::toDomainBill)
                 .toList();
 
-        RefundOrder refundOrder = RefundOrder.create(request.employeeId(), request.supervisorId(), request.motiveId(), bills);
+        RefundOrder refundOrder = RefundOrder.create(request.employeeId(), request.employeeName(), request.supervisorId(), request.supervisorName(), request.motiveId(), bills);
         RefundOrder saved = refundOrderRepository.save(refundOrder);
+
+        orderRefundCreatedProducer.produce(refundOrder);
 
         return RefundOrderMapper.toResponse(saved);
     }

@@ -53,10 +53,12 @@ public class RefundOrderJpaMapper {
         return new RefundOrder(
                 entity.getId(),
                 entity.getEmployeeId(),
+                null,
                 entity.getDateOrder(),
                 entity.getMotiveId(),
                 entity.getTotalValue(),
                 entity.getApproverId(),
+                null,
                 entity.getState(),
                 entity.getPaymentId(),
                 bills

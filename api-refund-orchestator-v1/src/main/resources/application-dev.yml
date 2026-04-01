@@ -21,3 +21,33 @@ http-clients:
 #      timeout: 5s
 
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      cbCreateOrderRefund:      # Nombre del CircuitBreaker, debe coincidir con el usado en @CircuitBreaker(name="chargeService")
+        slidingWindowSize: 10               # Número de llamadas consideradas en la "ventana deslizante" para calcular el estado (CLOSED/HALF-OPEN/OPEN)
+        failureRateThreshold: 50            # Porcentaje de fallos (0-100) para abrir el circuito. Ej: 50 significa que si 50% de llamadas fallan, se abre
+        waitDurationInOpenState: 10s         # Tiempo que el circuito permanece abierto antes de pasar a HALF-OPEN para probar si el servicio ya se recuperó
+        permittedNumberOfCallsInHalfOpenState: 3   # Cantidad de llamadas permitidas cuando está en HALF-OPEN para evaluar si el servicio funciona de nuevo
+        minimumNumberOfCalls: 5             # Mínimo de llamadas necesarias antes de evaluar si debe abrirse el circuito (para evitar decisiones con pocos datos)
+
+  retry:
+    instances:
+      defaultRetry: # Nombre que nosotros definimos
+        max-attempts: 5          # Número máximo de intentos
+        wait-duration: 1s        # Tiempo de espera entre intentos, despues de que termina la ejecución fallida
+        #retry-exceptions:
+        #  - com.mitocode.orchestrator.exception.ServiceUnavailableException  # Tipos de excepciones que van a disparar el retry
+        #  - feign.FeignException
+        #  - feign.RetryableException
+        #ignore-exceptions:
+        #  - java.lang.IllegalArgumentException # Se ignoran, no se reintenta
+        #  - com.mitocode.orchestrator.exception.ServiceTimeOutException
+
+  ratelimiter:
+    instances:
+      chargeRateLimiter: # Nombre que nosotros definimos
+        limit-for-period: 2       # máximo de llamadas permitidas
+        limit-refresh-period: 10s # cada cuánto se reinicia el contador
+        timeout-duration: 4s  #las llamadas excendentes esperan por un slot libre durante 1s segundos sino se llama al fallback
+
