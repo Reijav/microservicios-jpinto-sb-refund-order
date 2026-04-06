@@ -2,7 +2,7 @@ package com.jpinto.refund.adapter.rest;
 
 import com.jpinto.refund.application.dto.request.ApproveRefundRequest;
 import com.jpinto.refund.application.dto.request.CreateRefundOrderRequest;
-import com.jpinto.refund.application.dto.request.MarkAsPayedRequest;
+import com.jpinto.refund.application.dto.request.MarkPayRequest;
 import com.jpinto.refund.application.dto.request.RollbackStateRequest;
 import com.jpinto.refund.application.dto.response.RefundOrderResponse;
 import com.jpinto.refund.application.port.in.ChangeRefundStateUseCase;
@@ -64,8 +64,8 @@ public class RefundOrderController {
     }
 
     @PutMapping("/{id}/generate-payment-order")
-    public ResponseEntity<RefundOrderResponse> generatePaymentOrder(@PathVariable UUID id, @RequestBody   MarkAsPayedRequest request) {
-        return ResponseEntity.ok(changeRefundStateUseCase.generatePaymentOrder(id, request));
+    public ResponseEntity<RefundOrderResponse> registerPaymentOrder(@PathVariable UUID id, @RequestBody MarkPayRequest request) {
+        return ResponseEntity.ok(changeRefundStateUseCase.registerPaymentOrder(id, request));
     }
 
     @PutMapping("/{id}/mark-as-payed")

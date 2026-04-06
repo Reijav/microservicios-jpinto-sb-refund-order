@@ -22,7 +22,8 @@ public class ValidationDataStep implements SagaPaymentStep{
 
     @Override
     public void execute(PaymentSagaContext context) {
-        context.setPaymentResponse(paymentService.getById(context.getPayPaymentRequest().getPaymentId().toString()));
+        log.info("Charging data to pay order refund.");
+        context.setPaymentResponse(paymentService.getById(context.getPayPaymentRequest().getPaymentId()));
         context.setRefundOrderResponse(orderRefundService.getByPaymentId(context.getPayPaymentRequest().getPaymentId()));
         context.setEmpleado(talentHumanService.findById(context.getRefundOrderResponse().employeeId()));
         context.setSupervisor(talentHumanService.findById(context.getRefundOrderResponse().approverId()));

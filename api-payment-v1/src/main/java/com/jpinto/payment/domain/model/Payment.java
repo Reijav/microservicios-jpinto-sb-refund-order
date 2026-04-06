@@ -60,6 +60,7 @@ public class Payment {
         if (this.state == PaymentState.PROCESSED) {
             throw new InvalidPaymentStateTransitionException(this.state, PaymentState.CANCELLED);
         }
+        this.transactionId=null;
         this.state = PaymentState.CANCELLED;
     }
 

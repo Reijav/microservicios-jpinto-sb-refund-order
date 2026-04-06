@@ -2,6 +2,7 @@ package com.jpinto.orchestator.services.sagaapprove;
 
 import com.jpinto.orchestator.client.payment.dto.CreatePaymentRequest;
 import com.jpinto.orchestator.client.payment.dto.PayeeType;
+import com.jpinto.orchestator.client.payment.dto.Payment;
 import com.jpinto.orchestator.client.payment.dto.PaymentMethod;
 import com.jpinto.orchestator.client.refund.dto.MarkAsPayedRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundState;
@@ -29,7 +30,13 @@ public class CreatePaymentOrderStep implements  SagaApproveStep{
         log.info("Creación de pago ");
         CreatePaymentRequest createPaymentRequest= new CreatePaymentRequest(PayeeType.EMPLOYEE, context.getRefundOrderResponse().totalValue(), PaymentMethod.BANK_TRANSFER, LocalDate.now());
         context.setPaymentResponse( paymentService.create(createPaymentRequest));
-        orderRefundService.generatePaymentOrder(context.getRefundOrderResponse().id(),  new MarkAsPayedRequest(context.getPaymentResponse().id().toString()));
+        orderRefundService.generatePaymentOrder(context.getRefundOrderResponse().id(),  new MarkAsPayedRequest(new Payment(context.getPaymentResponse().id().toString(),
+                                                                                            context.getPaymentResponse().payeeType().name(),
+                                                                                            context.getPaymentResponse().amount(),
+                                                                                            context.getPaymentResponse().paymentMethod().name(),
+                                                                                            context.getPaymentResponse().paymentDate(),
+                                                                                            context.getPaymentResponse().transactionId(),
+                                                                                            context.getPaymentResponse().state().name())));
     }
 
     @Override

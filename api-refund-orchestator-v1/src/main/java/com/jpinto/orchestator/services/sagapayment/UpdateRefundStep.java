@@ -18,12 +18,14 @@ public class UpdateRefundStep implements  SagaPaymentStep{
 
     @Override
     public void execute(PaymentSagaContext context) {
+        log.info("Marking order like payed.");
         orderRefundService.markAsPayed(context.getRefundOrderResponse().id());
     }
 
     @Override
     public void compensate(PaymentSagaContext context) {
-        orderRefundService.rollbackState(context.getRefundOrderResponse().id(), RollbackStateRequest.builder().rollbackRefundState(RefundState.CREATED).build());
+        log.info("Marking order like creating (compensating).");
+        orderRefundService.rollbackState(context.getRefundOrderResponse().id(), RollbackStateRequest.builder().rollbackRefundState(RefundState.ORDERPAYGENERATED).build());
     }
 }
 

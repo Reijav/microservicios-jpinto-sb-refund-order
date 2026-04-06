@@ -64,7 +64,7 @@ public class RefundRestClientService {
     public RefundOrderResponse generatePaymentOrder(UUID id, MarkAsPayedRequest request) {
         log.info("Calling generate payment order.");
         return refundRestClient.put().
-                uri("/refund-orders/{id}/generate-payment-order", id).
+                uri("/refund-orders/{id}/generate-payment-order", id.toString()).
                 body(request).
                 retrieve().body(RefundOrderResponse.class);
     }

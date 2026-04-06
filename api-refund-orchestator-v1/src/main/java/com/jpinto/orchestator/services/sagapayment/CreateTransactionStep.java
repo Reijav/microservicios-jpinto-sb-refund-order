@@ -1,6 +1,7 @@
 package com.jpinto.orchestator.services.sagapayment;
 
 
+import com.jpinto.orchestator.client.accounting.dto.RequestCancelTransactionDto;
 import com.jpinto.orchestator.client.accounting.dto.RequestCreateTransactionDto;
 import com.jpinto.orchestator.client.accounting.dto.TransactionLineDto;
 import com.jpinto.orchestator.services.AccountingService;
@@ -19,14 +20,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CreateTransactionStep implements  SagaPaymentStep{
     private final AccountingService accountingService;
-    private final String CUENTA_GASTOS="GV";
-    private final String CUENTA_BANCOS="BNK";
+    private static final String CUENTA_GASTOS="GV";
+    private static final String CUENTA_BANCOS="BNK";
 
     @Override
     public void execute(PaymentSagaContext context) {
+        log.info("Creating transaction on api accounting.");
         var cuentaBancos=accountingService.getAccountByCode(CUENTA_BANCOS);
         var cuentaGastosViaticos=accountingService.getAccountByCode(CUENTA_GASTOS);
         var requestCreateTransaction= RequestCreateTransactionDto.builder()
+                .idOrderRefund(context.getRefundOrderResponse().id().toString())
                 .descripcion("Pago reembolso nro" + context.getPaymentResponse().id().toString()  + " para empleado " + context.getEmpleado().getFullName() + "("+ context.getEmpleado().getId() +")")
                 .lineDtoList(Arrays.asList(
                                         TransactionLineDto.builder()
@@ -43,8 +46,13 @@ public class CreateTransactionStep implements  SagaPaymentStep{
 
     @Override
     public void compensate(PaymentSagaContext context) {
+        log.info("Canceling (Compensing) transaction on api accounting.");
         if(Objects.nonNull(context.getTransactionDto())){
-            accountingService.cancelTransaction(context.getTransactionDto().getIdTransaction());
+            var requestCancelTransaction= RequestCancelTransactionDto.builder()
+                .idOrderRefund(context.getRefundOrderResponse().id().toString())
+                        .idTransaction(context.getTransactionDto().getIdTransaction()).build();
+
+            accountingService.cancelTransaction(requestCancelTransaction);
         }
     }
 }
