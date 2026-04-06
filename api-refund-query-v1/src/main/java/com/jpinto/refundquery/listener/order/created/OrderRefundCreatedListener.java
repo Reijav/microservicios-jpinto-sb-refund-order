@@ -38,6 +38,7 @@ public class OrderRefundCreatedListener {
                                     .id(orderCreateEvent.getSupervisor().getId())
                                     .name(orderCreateEvent.getSupervisor().getName())
                                     .build())
+                            .state(orderCreateEvent.getState())
                             .build());
             log.info("Consumo mensaje {}",message);
         } catch (Exception ex) {

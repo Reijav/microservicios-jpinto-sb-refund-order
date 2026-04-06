@@ -16,4 +16,5 @@ public class RefundOrderCreatedEvent {
     private BigDecimal totalValue;
     private Employee employee;
     private Supervisor supervisor;
+    private String state;
 }

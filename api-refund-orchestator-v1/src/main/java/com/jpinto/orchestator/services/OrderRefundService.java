@@ -55,7 +55,7 @@ public class OrderRefundService {
 
 
     public RefundOrderResponse createOrderFallBack(CreateRefundOrderRequest request, CallNotPermittedException ex){
-        log.error(ex.getMessage());
+        log.error("Servicio 'OrderRefundService' no disponible: " + ex.getMessage());
         notificationService.encolarEnvioHtmlMail(RequestSendMail.builder()
                         .subjet("Servicio 'OrderRefundService' no disponible")
                         .body("Se ha identificado error en el servicio de Reembolsos 'OrderRefundService' " +
