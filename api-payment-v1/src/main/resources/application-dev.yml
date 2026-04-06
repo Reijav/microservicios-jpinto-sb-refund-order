@@ -1,3 +1,10 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      #Enviar mensaje como String
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 eureka:
   client:
     service-url:

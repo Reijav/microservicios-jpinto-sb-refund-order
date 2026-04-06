@@ -7,4 +7,17 @@ spring:
     name: api-orchestator-refund-v1
   profiles:
     active: dev
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+        #include: "*" # Exponer todos los endpoints (en producción, es mejor limitar esto a solo los necesarios)
+      base-path: /actuator
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true

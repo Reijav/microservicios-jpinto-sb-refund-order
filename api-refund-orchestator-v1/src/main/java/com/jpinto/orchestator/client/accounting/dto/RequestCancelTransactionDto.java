@@ -3,13 +3,9 @@ package com.jpinto.orchestator.client.accounting.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 @Builder
-public class RequestCreateTransactionDto {
+public class RequestCancelTransactionDto {
     private String idOrderRefund;
-    private String descripcion;
-    private List<TransactionLineDto> lineDtoList;
-
+    private Long idTransaction;
 }

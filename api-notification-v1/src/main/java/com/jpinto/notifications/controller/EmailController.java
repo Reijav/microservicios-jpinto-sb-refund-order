@@ -21,10 +21,10 @@ public class EmailController {
         log.info(" {} Recibiendo peticion encolar-envio-mail ", Thread.currentThread());
         log.info("Mail enviado {}", request);
 
-        var valor=Math.abs( RandomGenerator.getDefault().nextInt() % 100);
-        if(valor > 50){
-            throw new RuntimeException("Error enviando mail");
-        }
+//        var valor=Math.abs( RandomGenerator.getDefault().nextInt() % 100);
+//        if(valor > 75){
+//            throw new RuntimeException("Error enviando mail");
+//        }
         return ResponseEntity.ok(Boolean.TRUE);
     }
 

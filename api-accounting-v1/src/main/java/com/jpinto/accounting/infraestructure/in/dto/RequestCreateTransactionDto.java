@@ -6,6 +6,8 @@ import java.util.List;
 
 @Data
 public class RequestCreateTransactionDto {
+    private String idOrderRefund;
     private String descripcion;
     private List<TransactionLineDto> lineDtoList;
+
 }

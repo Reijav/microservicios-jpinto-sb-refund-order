@@ -91,4 +91,13 @@ public class GlobalExceptionHandler {
         problem.setDetail(ex.getMessage());
         return problem;
     }
+
+    @ExceptionHandler(EmployeeNotFound.class)
+    public ProblemDetail handleruntimeEmployeeException(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Employee not found");
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
 }

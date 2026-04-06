@@ -1,10 +1,7 @@
 package com.jpinto.orchestator.services;
 
 import com.jpinto.orchestator.client.accounting.AccountingServiceRestClientService;
-import com.jpinto.orchestator.client.accounting.dto.AccountDto;
-import com.jpinto.orchestator.client.accounting.dto.RequestCreateTransactionDto;
-import com.jpinto.orchestator.client.accounting.dto.ResponseCancelTransactionDto;
-import com.jpinto.orchestator.client.accounting.dto.ResponseCreateTransactionDto;
+import com.jpinto.orchestator.client.accounting.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +14,8 @@ public class AccountingService {
         return accountingServiceRestClientService.createTransaction(request);
     }
 
-    public ResponseCancelTransactionDto cancelTransaction(Long id) {
-        return accountingServiceRestClientService.cancelTransaction(id);
+    public ResponseCancelTransactionDto cancelTransaction(RequestCancelTransactionDto requestCancelTransactionDto) {
+        return accountingServiceRestClientService.cancelTransaction(requestCancelTransactionDto);
     }
 
     public AccountDto getAccountByCode(String code) {

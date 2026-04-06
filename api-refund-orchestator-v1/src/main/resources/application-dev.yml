@@ -1,19 +1,36 @@
+#http-clients:
+#  internal:
+#    api-refund-v1:
+#      base-url: http://api-refund-v1/api-refunds
+#      timeout: 5s
+#    api-talenthuman-v1:
+#      base-url: http://api-talent-human-v1/api-talent-human
+#      timeout: 5s
+#    api-payment-v1:
+#      base-url: http://api-payment-v1/api-payment
+#      timeout: 5s
+#    api-notification-v1:
+#      base-url: http://api-notification-v1/api-notification
+#      timeout: 5s
+#    api-accounting-v1:
+#      base-url: http://api-accounting-v1/api-accounting
+#      timeout: 5s
 http-clients:
   internal:
     api-refund-v1:
-      base-url: http://api-refund-v1/api-refunds
+      base-url: http://localhost:50000/api-refunds
       timeout: 5s
     api-talenthuman-v1:
-      base-url: http://api-talent-human-v1/api-talent-human
+      base-url: http://localhost:50005/api-talent-human
       timeout: 5s
     api-payment-v1:
-      base-url: http://api-payment-v1/api-payment
+      base-url: http://localhost:50007/api-payment
       timeout: 5s
     api-notification-v1:
-      base-url: http://api-notification-v1/api-notification
+      base-url: http://localhost:50006/api-notification
       timeout: 5s
     api-accounting-v1:
-      base-url: http://api-accounting-v1/api-accounting
+      base-url: http://localhost:50001/api-accounting
       timeout: 5s
 #  external:
 #    api-visa-v1:
@@ -51,3 +68,12 @@ resilience4j:
         limit-refresh-period: 10s # cada cuánto se reinicia el contador
         timeout-duration: 4s  #las llamadas excendentes esperan por un slot libre durante 1s segundos sino se llama al fallback
 
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+jwt:
+  secret: my-secret-key-for-jwt-generation-mitocode-123456789012345

@@ -1,6 +1,7 @@
 package com.jpinto.accounting.infraestructure.in.controllers;
 
 import com.jpinto.accounting.application.port.in.TransactionUseCase;
+import com.jpinto.accounting.infraestructure.in.dto.RequestCancelTransactionDto;
 import com.jpinto.accounting.infraestructure.in.dto.RequestCreateTransactionDto;
 import com.jpinto.accounting.infraestructure.in.dto.ResponseCancelTransactionDto;
 import com.jpinto.accounting.infraestructure.in.dto.ResponseCreateTransactionDto;
@@ -19,17 +20,18 @@ public class TransactionController {
     @PostMapping()
     public ResponseEntity<ResponseCreateTransactionDto> createTransaction(@RequestBody   RequestCreateTransactionDto request){
 
-        var newTransaction=transactionUseCase.create(request.getDescripcion(), request.getLineDtoList().stream().map(LineDtoToDomainMapper::toDomain).toList());
+        var newTransaction=transactionUseCase.create(request.getIdOrderRefund(), request.getDescripcion(), request.getLineDtoList().stream().map(LineDtoToDomainMapper::toDomain).toList());
         ResponseCreateTransactionDto response= new ResponseCreateTransactionDto();
         response.setIdTransaction(newTransaction.getId());
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{id}/cancel-transaction")
-    public ResponseEntity<ResponseCancelTransactionDto> cancelTransaction(@PathVariable Long id){
+    @PutMapping("/cancel-transaction")
+    public ResponseEntity<ResponseCancelTransactionDto> cancelTransaction(@RequestBody RequestCancelTransactionDto request){
         var response = new ResponseCancelTransactionDto();
-        response.setIdTransaction(id);
-        transactionUseCase.cancel(id);
+
+        transactionUseCase.cancel(request.getIdOrderRefund(), request.getIdTransaction());
+        response.setIdTransaction(request.getIdTransaction());
         return ResponseEntity.ok(response);
     }
 }
