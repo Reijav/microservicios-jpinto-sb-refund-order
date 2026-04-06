@@ -21,10 +21,20 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
-flyway:
-  enabled: true
-  locations: classpath:db/migration
-  baseline-on-migrate: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
+        #include: "*" # Exponer todos los endpoints (en producción, es mejor limitar esto a solo los necesarios)
+      base-path: /actuator
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 logging:
   level:
     com.jpinto.refund: DEBUG
