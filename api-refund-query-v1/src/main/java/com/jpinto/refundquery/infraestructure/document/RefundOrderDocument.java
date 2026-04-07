@@ -18,9 +18,9 @@ import java.util.UUID;
 @Builder
 public class RefundOrderDocument {
     @Id
-    private final String id;
-    private final LocalDate dateOrder;
-    private final Long motiveId;
+    private String id;
+    private LocalDate dateOrder;
+    private Long motiveId;
     private BigDecimal totalValue;
     private EmployeeDocument employee;
     private SupervisorDocument supervisor;

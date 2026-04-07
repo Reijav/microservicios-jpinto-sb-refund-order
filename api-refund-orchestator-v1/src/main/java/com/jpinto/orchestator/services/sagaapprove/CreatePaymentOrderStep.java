@@ -27,8 +27,10 @@ public class CreatePaymentOrderStep implements  SagaApproveStep{
 
     @Override
     public void execute(ApproveOrderRefundSagaContext context) {
-        log.info("Creación de pago ");
-        CreatePaymentRequest createPaymentRequest= new CreatePaymentRequest(PayeeType.EMPLOYEE, context.getRefundOrderResponse().totalValue(), PaymentMethod.BANK_TRANSFER, LocalDate.now());
+        log.info("## APPROVE ORDER ## 3.Creación de pago ");
+        CreatePaymentRequest createPaymentRequest= new CreatePaymentRequest(PayeeType.EMPLOYEE, context.getRefundOrderResponse().totalValue(), PaymentMethod.BANK_TRANSFER, LocalDate.now(),
+                context.getEmpleado().getBank(),
+                context.getEmpleado().getAccountNumber());
         context.setPaymentResponse( paymentService.create(createPaymentRequest));
         orderRefundService.generatePaymentOrder(context.getRefundOrderResponse().id(),  new MarkAsPayedRequest(new Payment(context.getPaymentResponse().id().toString(),
                                                                                             context.getPaymentResponse().payeeType().name(),
@@ -36,12 +38,14 @@ public class CreatePaymentOrderStep implements  SagaApproveStep{
                                                                                             context.getPaymentResponse().paymentMethod().name(),
                                                                                             context.getPaymentResponse().paymentDate(),
                                                                                             context.getPaymentResponse().transactionId(),
-                                                                                            context.getPaymentResponse().state().name())));
+                                                                                            context.getPaymentResponse().state().name(),
+                                                                                            context.getEmpleado().getBank(),
+                                                                                            context.getEmpleado().getAccountNumber())));
     }
 
     @Override
     public void compensate(ApproveOrderRefundSagaContext context) {
-        log.info("Compensación de creación de pago ");
+        log.info("## APPROVE ORDER ## 3. Compensación de creación de pago ");
         if(Objects.nonNull(context.getPaymentResponse())){
             paymentService.cancel(context.getPaymentResponse().id());
         }

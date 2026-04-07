@@ -24,7 +24,7 @@ public class CancelTransactionProducer {
                     .build();
 
             kafkaTemplate.send(TOPIC, orderRefundId, mapper.writeValueAsString(event));
-            log.info("Order refund approved Event send");
+            log.info("Cancel transaction event sended");
         } catch (Exception ex) {
             log.error("Error trying to send Refund Order Created Event", ex);
         }

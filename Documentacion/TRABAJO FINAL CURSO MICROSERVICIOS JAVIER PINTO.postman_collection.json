@@ -1,0 +1,700 @@
+{
+  "info": {
+    "_postman_id": "3871c6d6-5a2f-4a47-98ac-2ebd57e1b21c",
+    "name": "TRABAJO FINAL CURSO MICROSERVICIOS JAVIER PINTO",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "4532920",
+    "_collection_link": "https://go.postman.co/collection/4532920-3871c6d6-5a2f-4a47-98ac-2ebd57e1b21c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "API ACCOUNTING V1",
+      "item": [
+        {
+          "name": "Creacion de Transaccion",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"descripcion\":\"orden de pago por reembolso\",\r\n    \"lineDtoList\":[\r\n        {\r\n            \"accountId\":1,\r\n            \"debit\": 10.5\r\n        },\r\n        {\r\n            \"accountId\":2,\r\n            \"credit\": 10.5\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50001/api-accounting/transacciones",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50001",
+              "path": [
+                "api-accounting",
+                "transacciones"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API NOTIFICATIONS V1",
+      "item": [
+        {
+          "name": "ENCOLAR NOTIFICACION",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"toEmail\": [\r\n    \"recipient@example.com\",\r\n    \"another@example.com\"\r\n  ],\r\n  \"ccEmail\": [\r\n    \"cc@example.com\"\r\n  ],\r\n  \"body\": \"Este es el cuerpo del mensaje.\",\r\n  \"subjet\": \"Asunto de la notificación\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50006/api-notification/encolar-envio-mail",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50006",
+              "path": [
+                "api-notification",
+                "encolar-envio-mail"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API ORCHESTATOR",
+      "item": [
+        {
+          "name": "CREATE ORDER REFUND",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"employeeId\": 1,\r\n  \"motiveId\": 3,\r\n  \"bills\": [\r\n    {\r\n      \"providerRuc\": \"1791856789001\",\r\n      \"providerName\": \"Restaurante El Ejecutivo S.A.\",\r\n      \"billNumber\": \"001-002-000056781\",\r\n      \"detail\": \"Almuerzo de trabajo con equipo de proveedores - reunión de negociación 14/03/2026\",\r\n      \"value\": 87.60,\r\n      \"billFile\": \"uploads/facturas/alimentacion_056781.pdf\"\r\n    },\r\n    {\r\n      \"providerRuc\": \"0992345678001\",\r\n      \"providerName\": \"Cooperativa de Transportes Quito Norte\",\r\n      \"billNumber\": \"003-001-000034512\",\r\n      \"detail\": \"Traslado ida y vuelta sede principal - proveedor zona industrial norte, 15/03/2026\",\r\n      \"value\": 32.50,\r\n      \"billFile\": \"uploads/facturas/transporte_034512.pdf\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:51100/api-orchestator-refund/orders-refund",
+              "host": [
+                "localhost"
+              ],
+              "port": "51100",
+              "path": [
+                "api-orchestator-refund",
+                "orders-refund"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "CREATE ORDER REFUND WITH ERROR",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"employeeId\": 2,\r\n  \"motiveId\": 3,\r\n  \"bills\": [\r\n    {\r\n      \"providerRuc\": \"1791856789001\",\r\n      \"providerName\": \"Restaurante El Ejecutivo S.A.\",\r\n      \"billNumber\": \"001-002-000056781\",\r\n      \"detail\": \"Almuerzo de trabajo con equipo de proveedores - reunión de negociación 14/03/2026\",\r\n      \"value\": 87.60,\r\n      \"billFile\": \"uploads/facturas/alimentacion_056781.pdf\"\r\n    },\r\n    {\r\n      \"providerRuc\": \"0992345678001\",\r\n      \"providerName\": \"Cooperativa de Transportes Quito Norte\",\r\n      \"billNumber\": \"003-001-000034512\",\r\n      \"detail\": \"Traslado ida y vuelta sede principal - proveedor zona industrial norte, 15/03/2026\",\r\n      \"value\": 32.50,\r\n      \"billFile\": \"uploads/facturas/transporte_034512.pdf\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:51100/api-orchestator-refund/orders-refund",
+              "host": [
+                "localhost"
+              ],
+              "port": "51100",
+              "path": [
+                "api-orchestator-refund",
+                "orders-refund"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "APPROVE ORDER REFUND",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"approverId\": 2,\r\n  \"orderRefundId\": \"af38e36d-2144-47f5-b1bb-b5ddd2ec86de\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:51100/api-orchestator-refund/orders-refund/approve",
+              "host": [
+                "localhost"
+              ],
+              "port": "51100",
+              "path": [
+                "api-orchestator-refund",
+                "orders-refund",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PAYMENT ORDER REFUND",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"paymentId\":\"fc6b78f8-6e45-4b4d-8fdd-3da01e056525\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "localhost:51100/api-orchestator-refund/payments/pay-order-refund",
+              "host": [
+                "localhost"
+              ],
+              "port": "51100",
+              "path": [
+                "api-orchestator-refund",
+                "payments",
+                "pay-order-refund"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API PAYMENT V1",
+      "item": [
+        {
+          "name": "Create Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payeeType\": \"PROVIDER\",\r\n  \"amount\": 120.10,\r\n  \"paymentMethod\": \"CASH\",\r\n  \"paymentDate\": \"2026-03-17\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50007/api-payment/payments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50007",
+              "path": [
+                "api-payment",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by Id",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"payeeType\": \"EMPLOYEE\",\r\n  \"amount\": 245.75,\r\n  \"paymentMethod\": \"BANK_TRANSFER\",\r\n  \"paymentDate\": \"2026-03-18\"\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:50007/api-payment/payments/171389ee-45d8-455d-80cc-c709095551ba",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50007",
+              "path": [
+                "api-payment",
+                "payments",
+                "171389ee-45d8-455d-80cc-c709095551ba"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel Payment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:50007/api-payment/payments/171389ee-45d8-455d-80cc-c709095551ba/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50007",
+              "path": [
+                "api-payment",
+                "payments",
+                "171389ee-45d8-455d-80cc-c709095551ba",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API REFUND V1",
+      "item": [
+        {
+          "name": "Create Refund",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"employeeId\": 1,\r\n  \"supervisorId\":2,\r\n  \"motiveId\": 3,\r\n  \"bills\": [\r\n    {\r\n      \"providerRuc\": \"1791856789001\",\r\n      \"providerName\": \"Restaurante El Ejecutivo S.A.\",\r\n      \"billNumber\": \"001-002-000056781\",\r\n      \"detail\": \"Almuerzo de trabajo con equipo de proveedores - reunión de negociación 14/03/2026\",\r\n      \"value\": 87.60,\r\n      \"billFile\": \"uploads/facturas/alimentacion_056781.pdf\"\r\n    },\r\n    {\r\n      \"providerRuc\": \"0992345678001\",\r\n      \"providerName\": \"Cooperativa de Transportes Quito Norte\",\r\n      \"billNumber\": \"003-001-000034512\",\r\n      \"detail\": \"Traslado ida y vuelta sede principal - proveedor zona industrial norte, 15/03/2026\",\r\n      \"value\": 32.50,\r\n      \"billFile\": \"uploads/facturas/transporte_034512.pdf\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50000/api-refunds/refund-orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50000",
+              "path": [
+                "api-refunds",
+                "refund-orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Approve Refund",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"approverId\": 1001\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50000/api-refunds/refund-orders/c3e3863c-b441-4162-9424-10e9ab487b87/approve",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50000",
+              "path": [
+                "api-refunds",
+                "refund-orders",
+                "c3e3863c-b441-4162-9424-10e9ab487b87",
+                "approve"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Refund",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"approverId\": 1001\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50000/api-refunds/refund-orders/c3e3863c-b441-4162-9424-10e9ab487b87/reject",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50000",
+              "path": [
+                "api-refunds",
+                "refund-orders",
+                "c3e3863c-b441-4162-9424-10e9ab487b87",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate Payment",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:50000/api-refunds/refund-orders/c3e3863c-b441-4162-9424-10e9ab487b87/generate-payment-ordergenerate-payment-order",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50000",
+              "path": [
+                "api-refunds",
+                "refund-orders",
+                "c3e3863c-b441-4162-9424-10e9ab487b87",
+                "generate-payment-ordergenerate-payment-order"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark as Payed",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"paymentId\": \"b441-4162-9424\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:50000/api-refunds/refund-orders/c3e3863c-b441-4162-9424-10e9ab487b87/mark-as-payed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50000",
+              "path": [
+                "api-refunds",
+                "refund-orders",
+                "c3e3863c-b441-4162-9424-10e9ab487b87",
+                "mark-as-payed"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API TALENT HUMAN",
+      "item": [
+        {
+          "name": "Employee by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:50005/api-talent-human/employee/by-id/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50005",
+              "path": [
+                "api-talent-human",
+                "employee",
+                "by-id",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Employee by user id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:50005/api-talent-human/employee/by-user-id/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50005",
+              "path": [
+                "api-talent-human",
+                "employee",
+                "by-user-id",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "API AUTH",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"empleado3\",\n    \"password\": \"empleado123\",\n    \"roles\": [\"EMPLEADO\"]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:50300/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50300",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parsear la respuesta JSON",
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "// Guardar el access token y refresh token en variables de entorno",
+                  "pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                  "",
+                  "// (Opcional) guardar el tiempo de expiración si lo usas después",
+                  "pm.environment.set(\"expiresIn\", jsonData.expiresIn);",
+                  "",
+                  "// Mostrar en consola para verificación",
+                  "console.log(\"Access Token guardado:\", jsonData.accessToken);",
+                  "console.log(\"Refresh Token guardado:\", jsonData.refreshToken);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"supervisor\",\n    \"password\": \"supervisor123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:50300/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50300",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Parsear la respuesta JSON",
+                  "let jsonData = pm.response.json();",
+                  "",
+                  "// Guardar el access token y refresh token en variables de entorno",
+                  "pm.environment.set(\"accessToken\", jsonData.accessToken);",
+                  "pm.environment.set(\"refreshToken\", jsonData.refreshToken);",
+                  "",
+                  "// (Opcional) guardar el tiempo de expiración si lo usas después",
+                  "pm.environment.set(\"expiresIn\", jsonData.expiresIn);",
+                  "",
+                  "// Mostrar en consola para verificación",
+                  "console.log(\"Access Token guardado:\", jsonData.accessToken);",
+                  "console.log(\"Refresh Token guardado:\", jsonData.refreshToken);",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refreshToken\": \"{{refreshToken}}\"\n  }"
+            },
+            "url": {
+              "raw": "http://localhost:50300/api/v1/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50300",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"token\": \"{{accessToken}}\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:50300/api/v1/auth/validate",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "50300",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "validate"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

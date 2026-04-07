@@ -4,9 +4,11 @@ import com.jpinto.orchestator.exceptions.ActionNotAllowedException;
 import com.jpinto.orchestator.services.OrderRefundService;
 import com.jpinto.orchestator.services.TalentHumanService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @Order(100)
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ public class ValidationOrderStep implements SagaApproveStep{
 
     @Override
     public void execute(ApproveOrderRefundSagaContext context) {
+        log.info("## APPROVE ORDER ## 1. Charging data to Approve order refund");
         context.setRefundOrderResponse(orderRefundService.getById(context.getApproveRefundRequest().orderRefundId()));
         context.setEmpleado(talentHumanService.findById(context.getRefundOrderResponse().employeeId()));
         context.setSupervisor(talentHumanService.findById(context.getRefundOrderResponse().approverId()));
@@ -27,6 +30,6 @@ public class ValidationOrderStep implements SagaApproveStep{
 
     @Override
     public void compensate(ApproveOrderRefundSagaContext context) {
-
+        log.info("## APPROVE ORDER ## 1. Compensación validacion, chargind data.");
     }
 }

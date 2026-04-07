@@ -24,11 +24,12 @@ public class OrderRefundCreatedProducer {
         try {
             RefundOrderCreatedEvent event = RefundOrderCreatedEvent.builder()
                     .dateOrder(order.getDateOrder())
-                    .id(order.getId())
+                    .id(order.getId().toString())
                     .motiveId(order.getMotiveId())
                     .totalValue(order.getTotalValue())
                     .employee(Employee.builder().id(order.getEmployeeId()).name(order.getEmployeeName()).build())
                     .supervisor(Supervisor.builder().id(order.getApproverId()).name(order.getApproverName()).build())
+                    .state(order.getState().name())
                     .build();
 
             kafkaTemplate.send(TOPIC, order.getId().toString(), mapper.writeValueAsString(event));

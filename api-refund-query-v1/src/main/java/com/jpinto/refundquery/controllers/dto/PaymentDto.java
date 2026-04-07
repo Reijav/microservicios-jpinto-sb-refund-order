@@ -1,4 +1,4 @@
-package com.jpinto.refundquery.infraestructure.document;
+package com.jpinto.refundquery.controllers.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 @AllArgsConstructor
-public class PaymentDocument{
+public class PaymentDto {
         private String id;
         private String payeeType;
         private BigDecimal amount;
@@ -20,5 +20,5 @@ public class PaymentDocument{
         private Long transactionId;
         private String state;
         private String bank;
-        private String savingAccoung;
+        private String savingAccount;
 }

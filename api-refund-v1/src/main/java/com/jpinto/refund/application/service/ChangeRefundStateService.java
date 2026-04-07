@@ -54,7 +54,7 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
         var response= RefundOrderMapper.toResponse(refundOrderRepository.save(order));
         orderRefundApprovedProducer.produce(order, new Payment(request.payment().id(), request.payment().payeeType(),
                 request.payment().amount(), request.payment().paymentMethod(), request.payment().paymentDate(), request.payment().transactionId(),
-                request.payment().state()));
+                request.payment().state(), request.payment().bank(), request.payment().savingAccount()));
         return response;
     }
 

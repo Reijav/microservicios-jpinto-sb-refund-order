@@ -2,6 +2,7 @@ package com.jpinto.refundquery.listener.transaction.cancel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpinto.refundquery.infraestructure.repository.RefundOrderRepository;
+import com.jpinto.refundquery.listener.transaction.cancel.event.CancelTransactionEvent;
 import com.jpinto.refundquery.listener.transaction.create.event.CreateTransactionEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,13 @@ public class CancelTransactionListener {
     public void handle(String message) {
         try {
 
-            CreateTransactionEvent event= objectMapper.readValue(message, CreateTransactionEvent.class);
+            CancelTransactionEvent event= objectMapper.readValue(message, CancelTransactionEvent.class);
             var refundOrder=refundOrderRepository.findById(event.getOrderRefundId());
 
             if(refundOrder.isEmpty()){
                 throw new RuntimeException("Error orden de reembolso no encontrado :  " + event.getTransactionId());
             }
 
-            refundOrder.get().getPayment().setTransactionId(null);
             refundOrderRepository.save(refundOrder.get());
 
             log.info("Consumo mensaje {}",message);

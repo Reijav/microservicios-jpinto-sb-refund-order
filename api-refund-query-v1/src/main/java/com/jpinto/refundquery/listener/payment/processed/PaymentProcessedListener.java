@@ -27,7 +27,9 @@ public class PaymentProcessedListener {
                 throw new RuntimeException("Error orden de reembolso no encontrado :  " + event.getPaymentId());
             }
 
+            refundOrder.get().setState("PAYED");
             refundOrder.get().getPayment().setState(PaymentState.PROCESSED.name());
+            refundOrder.get().getPayment().setPaymentDate(event.getPaymentDate());
             refundOrderRepository.save(refundOrder.get());
 
             log.info("Consumo mensaje {}",message);

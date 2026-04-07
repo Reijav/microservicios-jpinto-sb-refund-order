@@ -25,12 +25,12 @@ public class CreateTransactionStep implements  SagaPaymentStep{
 
     @Override
     public void execute(PaymentSagaContext context) {
-        log.info("Creating transaction on api accounting.");
+        log.info("## PAYMENT ORDER ## 2. Creating transaction on api accounting.");
         var cuentaBancos=accountingService.getAccountByCode(CUENTA_BANCOS);
         var cuentaGastosViaticos=accountingService.getAccountByCode(CUENTA_GASTOS);
         var requestCreateTransaction= RequestCreateTransactionDto.builder()
                 .idOrderRefund(context.getRefundOrderResponse().id().toString())
-                .descripcion("Pago reembolso nro" + context.getPaymentResponse().id().toString()  + " para empleado " + context.getEmpleado().getFullName() + "("+ context.getEmpleado().getId() +")")
+                .descripcion("Pago reembolso nro: " + context.getPaymentResponse().id().toString()  + " para empleado " + context.getEmpleado().getFullName() + "("+ context.getEmpleado().getId() +")")
                 .lineDtoList(Arrays.asList(
                                         TransactionLineDto.builder()
                                                 .debit(context.getPaymentResponse().amount())
@@ -46,7 +46,7 @@ public class CreateTransactionStep implements  SagaPaymentStep{
 
     @Override
     public void compensate(PaymentSagaContext context) {
-        log.info("Canceling (Compensing) transaction on api accounting.");
+        log.info("## PAYMENT ORDER ## 2. Canceling (Compensación) transaction on api accounting.");
         if(Objects.nonNull(context.getTransactionDto())){
             var requestCancelTransaction= RequestCancelTransactionDto.builder()
                 .idOrderRefund(context.getRefundOrderResponse().id().toString())

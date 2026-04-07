@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @Builder
 public class RefundOrderCreatedEvent {
-    private final UUID id;
+    private final String id;
     private final LocalDate dateOrder;
     private final Long motiveId;
     private BigDecimal totalValue;

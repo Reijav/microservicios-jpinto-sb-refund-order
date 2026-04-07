@@ -4,29 +4,43 @@ import com.jpinto.orchestator.client.notification.dto.RequestSendMail;
 import com.jpinto.orchestator.client.refund.dto.CreateRefundOrderRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundOrderResponse;
 import com.jpinto.orchestator.dto.CreateOrderRefundRequest;
+import jakarta.ws.rs.NotAllowedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class OrderRefundOrchestetorService {
+public class CreateOrderRefundOrchestetorService {
 
     private final OrderRefundService orderRefundService;
     private final TalentHumanService talentHumanService;
     private final NotificationService notificationService;
 
     public RefundOrderResponse createOrderRefund(CreateOrderRefundRequest request){
-        log.info("Consulta empleado");
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Long userId= (Long) ((JwtAuthenticationToken) Objects.requireNonNull(securityContext.getAuthentication())).getToken().getClaims().get("user-id");
+
+        log.info("## CREATE ORDER ## 1. Consulta empleado");
         var employee=talentHumanService.findById(request.getEmployeeId());
-        log.info("Consulta supervisor");
+
+        if(!userId.equals(employee.getUserId())){
+            throw new IllegalArgumentException("El id de empleado debe correspondes al usuario logeado");
+        }
+
+        log.info("## CREATE ORDER ## 2. Consulta supervisor");
         var supervisor= talentHumanService.findById(employee.getInmediateSupervisorId());
-        log.info("Creacion orden de reembolso");
+        log.info("## CREATE ORDER ## 3. Creacion orden de reembolso");
         var response= orderRefundService.create(new CreateRefundOrderRequest(request.getEmployeeId(), employee.getFullName(), supervisor.getId(), supervisor.getFullName(), request.getMotiveId(), request.getBills()));
-        log.info("Encolar envio de mail");
+        log.info("## CREATE ORDER ## 4. Encolar envio de mail");
         notificationService.encolarEnvioHtmlMail(RequestSendMail.builder()
                         .subjet("Nueva orden de reembolso por revisar")
                         .ccEmail(List.of(supervisor.getEmail()))

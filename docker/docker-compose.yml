@@ -2,10 +2,10 @@
 #Crear network
 #docker network create ms-trabajo-final-jpinto
 #Levantar servicios core con el siguiente comando, solo si estamos en la raiz del proyecto:
-# docker-compose --file docker/infra-compose.yml --profile core up
+# docker-compose --file docker/docker-compose.yml --profile core up
 
 #Levantar servicios si estoy dentro de la carpeta docker
-# docker-compose --profile core --file infra-compose.yml up
+# docker-compose --profile core --file docker-compose.yml up
 
 #Depende la version de docker-compose que tengas instalado, puede que necesites usar "docker compose" en lugar de "docker-compose"
 
@@ -187,8 +187,8 @@ services:
     networks:
       - ms-trabajo-final-jpinto
 #Levantar un servicio especifico de todo el compose
-#docker-compose --file docker/infra-compose.yml --profile core up jaeger
-#docker compose -f docker/infra-compose.yml -p docker up -d jaeger
+#docker-compose --file docker/docker-compose.yml --profile core up jaeger
+#docker compose -f docker/docker-compose.yml -p docker up -d jaeger
   jaeger:
     profiles: ["nouse"]
     image: jaegertracing/all-in-one:1.53

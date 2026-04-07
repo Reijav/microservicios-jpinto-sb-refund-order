@@ -30,12 +30,14 @@ public class OrderApprovedListener {
 
             refundOrderDocument.get().setPayment(new PaymentDocument(markPayEvent.getPayment().id(),
                     markPayEvent.getPayment().payeeType(), markPayEvent.getPayment().amount(), markPayEvent.getPayment().paymentMethod(),
-                    markPayEvent.getPayment().paymentDate(), markPayEvent.getPayment().transactionId(), markPayEvent.getPayment().state()));
+                    markPayEvent.getPayment().paymentDate(), markPayEvent.getPayment().transactionId(), markPayEvent.getPayment().state(),
+                    markPayEvent.getPayment().bank(), markPayEvent.getPayment().savingAccount()));
 
+            refundOrderDocument.get().setState("ORDERPAYGENERATED");
             refundOrderRepository.save(refundOrderDocument.get());
             log.info("Consumo mensaje {}",message);
         } catch (Exception ex) {
-            log.error("Error trying to process Order Created Event", ex);
+            log.error("Error trying to process Order approved Event", ex);
         }
     }
 

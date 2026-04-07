@@ -26,7 +26,7 @@ public class OrderRefundCreatedListener {
 
 
             refundOrderRepository.save(RefundOrderDocument.builder()
-                            .id(orderCreateEvent.getId().toString())
+                            .id(orderCreateEvent.getId())
                             .dateOrder(orderCreateEvent.getDateOrder())
                             .totalValue(orderCreateEvent.getTotalValue())
                             .motiveId(orderCreateEvent.getMotiveId())
