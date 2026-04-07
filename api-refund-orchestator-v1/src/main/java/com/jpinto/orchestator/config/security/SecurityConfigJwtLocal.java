@@ -106,7 +106,7 @@ public class SecurityConfigJwtLocal {
                         // Se permiten sin token para que load balancers, Kubernetes liveness probes
                         // y Prometheus puedan consultarlos sin autenticarse.
                         // Estos endpoints no exponen datos de negocio sensibles.
-                        .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers("/actuator/**","/swagger-ui/**","/v3/api-docs/**").permitAll()
 
                         // Cualquier otra ruta requiere un JWT válido en el header Authorization.
                         // Escenarios:

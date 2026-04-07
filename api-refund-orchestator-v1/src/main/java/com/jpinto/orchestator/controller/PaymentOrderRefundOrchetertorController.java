@@ -1,5 +1,6 @@
 package com.jpinto.orchestator.controller;
 
+import com.jpinto.orchestator.controller.document.PagoOrdenReembolsoControllerDoc;
 import com.jpinto.orchestator.dto.PayPaymentRequest;
 import com.jpinto.orchestator.dto.PayPaymentResponse;
 import com.jpinto.orchestator.services.PaymentOrderRefundWithCompensationService;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/payments")
 @RequiredArgsConstructor
-public class PaymentOrderRefundOrchetertorController {
+public class PaymentOrderRefundOrchetertorController implements PagoOrdenReembolsoControllerDoc {
     private final PaymentOrderRefundWithCompensationService paymentOrderRefundWithCompensationService;
 
     @PreAuthorize("hasAuthority('CONTADOR')")

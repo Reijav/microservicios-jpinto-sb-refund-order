@@ -2,6 +2,7 @@ package com.jpinto.orchestator.controller;
 
 import com.jpinto.orchestator.client.refund.dto.ApproveRefundRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundOrderResponse;
+import com.jpinto.orchestator.controller.document.OrdenReembolsoControllerDoc;
 import com.jpinto.orchestator.dto.ApprovedRefundResponse;
 import com.jpinto.orchestator.dto.CreateOrderRefundRequest;
 import com.jpinto.orchestator.services.ApproveOrderRefundWithCompensationService;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/orders-refund")
 @RequiredArgsConstructor
-public class OrderRefundOrchestetorController {
+public class OrderRefundOrchestetorController implements OrdenReembolsoControllerDoc {
     private final CreateOrderRefundOrchestetorService orderRefundOrchestetorService;
     private final ApproveOrderRefundWithCompensationService approveOrderRefundWithCompensationService;
 
