@@ -9,5 +9,7 @@ public record CreatePaymentRequest(
         PayeeType payeeType,
         BigDecimal amount,
         PaymentMethod paymentMethod,
-        LocalDate paymentDate
+        LocalDate paymentDate,
+        String bank,
+        String savingAccount
 ) {}

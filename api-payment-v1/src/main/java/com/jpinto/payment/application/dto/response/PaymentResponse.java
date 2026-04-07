@@ -6,6 +6,7 @@ import com.jpinto.payment.domain.model.PaymentState;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record PaymentResponse(
@@ -13,7 +14,7 @@ public record PaymentResponse(
         PayeeType payeeType,
         BigDecimal amount,
         PaymentMethod paymentMethod,
-        LocalDate paymentDate,
+        LocalDateTime paymentDate,
         String transactionId,
         PaymentState state
 ) {}

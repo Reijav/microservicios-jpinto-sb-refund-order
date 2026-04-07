@@ -15,7 +15,9 @@ public class PaymentJpaMapper {
                 domain.getPaymentMethod(),
                 domain.getPaymentDate(),
                 domain.getTransactionId(),
-                domain.getState()
+                domain.getState(),
+                domain.getBank(),
+                domain.getSavingAccount()
         );
     }
 
@@ -27,7 +29,9 @@ public class PaymentJpaMapper {
                 entity.getPaymentMethod(),
                 entity.getPaymentDate(),
                 entity.getTransactionId(),
-                entity.getState()
+                entity.getState(),
+                entity.getBank(),
+                entity.getSavingAccount()
         );
     }
 }

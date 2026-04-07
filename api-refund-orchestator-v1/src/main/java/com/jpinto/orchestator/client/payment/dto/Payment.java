@@ -10,5 +10,7 @@ public record Payment(
         String paymentMethod,
         LocalDate paymentDate,
         String transactionId,
-        String state
+        String state,
+        String bank,
+        String savingAccount
 ) {}

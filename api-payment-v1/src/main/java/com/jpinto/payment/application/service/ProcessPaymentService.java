@@ -24,8 +24,8 @@ public class ProcessPaymentService implements ProcessPaymentUseCase {
     public PaymentResponse processPayment(UUID paymentId, Long transactionalId) {
         Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentNotFoundException(paymentId));
-        payment.process(transactionalId.toString());
-        processPaymentProducer.produce(paymentId.toString());
+         payment.process(transactionalId.toString());
+        processPaymentProducer.produce(paymentId.toString(), payment.getPaymentDate());
         return PaymentMapper.toResponse(paymentRepository.save(payment));
     }
 }

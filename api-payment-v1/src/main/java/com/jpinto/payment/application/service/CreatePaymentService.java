@@ -25,7 +25,9 @@ public class CreatePaymentService implements CreatePaymentUseCase {
                 request.payeeType(),
                 request.amount(),
                 request.paymentMethod(),
-                request.paymentDate()
+                null,
+                request.bank(),
+                request.savingAccount()
         );
         return PaymentMapper.toResponse(paymentRepository.save(payment));
     }

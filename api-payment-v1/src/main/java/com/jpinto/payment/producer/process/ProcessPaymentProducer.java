@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+
 
 @Component
 @Slf4j
@@ -17,10 +19,11 @@ public class ProcessPaymentProducer {
     private final KafkaTemplate<String,Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public void produce(String paymentId){
+    public void produce(String paymentId, LocalDateTime paymentDate){
         try{
             PaymentProcessedEvent event = PaymentProcessedEvent.builder()
                     .paymentId(paymentId)
+                    .paymentDate(paymentDate)
                     .build();
 
             kafkaTemplate.send(TOPIC, paymentId, objectMapper.writeValueAsString(event));

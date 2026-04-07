@@ -20,6 +20,10 @@ public record CreatePaymentRequest(
         @NotNull(message = "paymentMethod is required")
         PaymentMethod paymentMethod,
 
-        @NotNull(message = "paymentDate is required")
-        LocalDate paymentDate
+        @NotNull(message = "bank is required")
+                String bank,
+
+        @NotNull(message = "savingAccount is required")
+                String savingAccount
+
 ) {}

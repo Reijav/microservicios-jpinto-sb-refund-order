@@ -11,6 +11,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -36,8 +37,8 @@ public class PaymentJpaEntity {
     @Column(name = "payment_method", nullable = false, length = 20)
     private PaymentMethod paymentMethod;
 
-    @Column(name = "payment_date", nullable = false)
-    private LocalDate paymentDate;
+    @Column(name = "payment_date")
+    private LocalDateTime paymentDate;
 
     @Column(name = "transaction_id")
     private String transactionId;
@@ -45,4 +46,10 @@ public class PaymentJpaEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private PaymentState state;
+
+    @Column(nullable = false, length = 50)
+    private String bank;
+
+    @Column(nullable = false, length = 20)
+    private String savingAccount;
 }
