@@ -45,7 +45,7 @@ public class AuthService {
         UserEntity user = userRepository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("Usuario no existe"));
         List<String> roles = user.getRoles();
 
-        String token = jwtUtil.generateToken(user.getUsername(), roles);
+        String token = jwtUtil.generateToken(user.getId(),user.getUsername(), roles);
         String refreshToken = jwtUtil.generateRefreshToken(user.getUsername());
 
         return new TokenResponse(token, refreshToken, jwtUtil.getJwtExpiration().toMillis());
@@ -60,7 +60,7 @@ public class AuthService {
         UserEntity user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("Usuario no existe"));
 
         List<String> roles = user.getRoles();
-        String token = jwtUtil.generateToken(username, roles);
+        String token = jwtUtil.generateToken(user.getId(),username, roles);
 
         return new TokenResponse(token, request.getRefreshToken(), jwtUtil.getJwtExpiration().toMillis());
     }

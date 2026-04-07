@@ -65,7 +65,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // Generar nuestro JWT con los mismos roles que el flujo local.
         // El orquestador lo valida sin saber si el usuario se autenticó con GitHub o con /login.
-        String accessToken = jwtUtil.generateToken(username, user.getRoles());
+        String accessToken = jwtUtil.generateToken(user.getId(), username, user.getRoles());
         String refreshToken = jwtUtil.generateRefreshToken(username);
 
         TokenResponse tokenResponse = new TokenResponse(

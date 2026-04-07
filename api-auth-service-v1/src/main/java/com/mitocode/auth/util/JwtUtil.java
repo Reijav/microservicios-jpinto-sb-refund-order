@@ -33,7 +33,7 @@ public class JwtUtil {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String generateToken(String username, List<String> roles) {
+    public String generateToken(Long userId, String username, List<String> roles) {
         Instant now = Instant.now();
         Instant exp = now.plus(jwtExpiration);
 
@@ -42,6 +42,7 @@ public class JwtUtil {
                 .setIssuedAt(Date.from(now))
                 .setExpiration(Date.from(exp))
                 .claim("roles", roles)
+                .claim("user-id", userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }

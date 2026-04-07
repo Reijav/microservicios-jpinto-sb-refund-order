@@ -5,26 +5,49 @@ import com.jpinto.orchestator.client.refund.dto.RefundOrderResponse;
 import com.jpinto.orchestator.dto.ApprovedRefundResponse;
 import com.jpinto.orchestator.dto.CreateOrderRefundRequest;
 import com.jpinto.orchestator.services.ApproveOrderRefundWithCompensationService;
-import com.jpinto.orchestator.services.OrderRefundOrchestetorService;
+import com.jpinto.orchestator.services.CreateOrderRefundOrchestetorService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/orders-refund")
 @RequiredArgsConstructor
 public class OrderRefundOrchestetorController {
-    private final OrderRefundOrchestetorService orderRefundOrchestetorService;
+    private final CreateOrderRefundOrchestetorService orderRefundOrchestetorService;
     private final ApproveOrderRefundWithCompensationService approveOrderRefundWithCompensationService;
 
 
     @PostMapping()
+    @PreAuthorize("hasAuthority('EMPLEADO')")
     public RefundOrderResponse createOrderRefund(@RequestBody CreateOrderRefundRequest request){
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+
+        Set<String> authorities = securityContext
+                .getAuthentication()
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        log.info("----------------------------------------");
+        authorities.forEach(log::info);
+        log.info("----------------------------------------");
+
         return orderRefundOrchestetorService.createOrderRefund(request);
     }
 
     @PutMapping("/approve")
+    @PreAuthorize("hasAuthority('SUPERVISOR')")
     public ApprovedRefundResponse approveOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
         if(Objects.isNull(approveRefundRequest.orderRefundId())){
             throw new RuntimeException("Error. id orden no válido");
@@ -32,11 +55,12 @@ public class OrderRefundOrchestetorController {
         return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
     }
 
-//    @PutMapping("/reject")
-//    public ApprovedRefundResponse rejectOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
-//        if(Objects.isNull(approveRefundRequest.orderRefundId())){
-//            throw new RuntimeException("Error. id orden no válido");
-//        }
-//        return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
-//    }
+    @PutMapping("/reject")
+    @PreAuthorize("hasAuthority('SUPERVISOR')")
+    public ApprovedRefundResponse rejectOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
+        if(Objects.isNull(approveRefundRequest.orderRefundId())){
+            throw new RuntimeException("Error. id orden no válido");
+        }
+        return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
+    }
 }
