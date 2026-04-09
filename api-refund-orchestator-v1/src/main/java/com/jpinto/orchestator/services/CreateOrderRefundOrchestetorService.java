@@ -30,16 +30,12 @@ public class CreateOrderRefundOrchestetorService {
         Long userId= (Long) ((JwtAuthenticationToken) Objects.requireNonNull(securityContext.getAuthentication())).getToken().getClaims().get("user-id");
 
         log.info("## CREATE ORDER ## 1. Consulta empleado");
-        var employee=talentHumanService.findById(request.getEmployeeId());
-
-        if(!userId.equals(employee.getUserId())){
-            throw new IllegalArgumentException("El id de empleado debe correspondes al usuario logeado");
-        }
+        var employee=talentHumanService.findByUserId(userId);
 
         log.info("## CREATE ORDER ## 2. Consulta supervisor");
         var supervisor= talentHumanService.findById(employee.getInmediateSupervisorId());
         log.info("## CREATE ORDER ## 3. Creacion orden de reembolso");
-        var response= orderRefundService.create(new CreateRefundOrderRequest(request.getEmployeeId(), employee.getFullName(), supervisor.getId(), supervisor.getFullName(), request.getMotiveId(), request.getBills()));
+        var response= orderRefundService.create(new CreateRefundOrderRequest(employee.getId(), employee.getFullName(), supervisor.getId(), supervisor.getFullName(), request.getMotiveId(), request.getBills()));
         log.info("## CREATE ORDER ## 4. Encolar envio de mail");
         notificationService.encolarEnvioHtmlMail(RequestSendMail.builder()
                         .subjet("Nueva orden de reembolso por revisar")

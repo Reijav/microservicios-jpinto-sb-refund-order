@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CreateOrderRefundRequest {
-    private Long employeeId;
     private Long motiveId;
     private List<CreateRefundBillRequest> bills;
 }

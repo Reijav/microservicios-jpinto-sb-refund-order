@@ -37,12 +37,12 @@ public class OrderRefundService {
         return refundRestClientService.create(request);
     }
 
-    public RefundOrderResponse approve(UUID id, ApproveRefundRequest request) {
-        return refundRestClientService.approve(id, request);
+    public RefundOrderResponse approve(UUID id) {
+        return refundRestClientService.approve(id);
     }
 
-    public RefundOrderResponse reject(UUID id, ApproveRefundRequest request) {
-        return refundRestClientService.reject(id, request);
+    public RefundOrderResponse reject( RejectRefundRequest request) {
+        return refundRestClientService.reject(request.orderRefundId(), request);
     }
 
     public RefundOrderResponse generatePaymentOrder(UUID id, MarkAsPayedRequest request) {

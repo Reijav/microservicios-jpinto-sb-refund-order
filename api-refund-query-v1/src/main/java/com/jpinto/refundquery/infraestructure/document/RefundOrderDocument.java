@@ -26,4 +26,5 @@ public class RefundOrderDocument {
     private SupervisorDocument supervisor;
     private PaymentDocument payment;
     private String state;
+    private String observation;
 }

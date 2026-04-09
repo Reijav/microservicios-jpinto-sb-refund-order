@@ -25,6 +25,7 @@ public class RefundOrderMapper {
                 order.getApproverId(),
                 order.getState(),
                 order.getPaymentId(),
+                order.getObservation(),
                 billResponses
         );
     }
@@ -39,6 +40,7 @@ public class RefundOrderMapper {
                 bill.getDetail(),
                 bill.getValue(),
                 bill.getBillFile()
+
         );
     }
 }

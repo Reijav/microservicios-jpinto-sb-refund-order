@@ -21,6 +21,7 @@ public class RefundOrder {
     private final String approverName;
     private RefundState state;
     private String paymentId;
+    private String observation;
     private final List<RefundBill> bills;
 
     // Factory method for creating new refund orders
@@ -35,13 +36,13 @@ public class RefundOrder {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return new RefundOrder(UUID.randomUUID(), employeeId,employeeName,  LocalDate.now(),
-                motiveId, total, supervisorId,supervisorName, RefundState.CREATED, null, new ArrayList<>(bills));
+                motiveId, total, supervisorId,supervisorName, RefundState.CREATED, null, null, new ArrayList<>(bills));
     }
 
     // Full constructor for reconstitution from persistence
     public RefundOrder(UUID id, Long employeeId, String employeeName, LocalDate dateOrder, Long motiveId,
                        BigDecimal totalValue, Long approverId,String approverName, RefundState state,
-                       String paymentId, List<RefundBill> bills) {
+                       String paymentId, String observation,List<RefundBill> bills) {
         this.id = id;
         this.employeeId = employeeId;
         this.employeeName=employeeName;
@@ -52,16 +53,15 @@ public class RefundOrder {
         this.approverName=approverName;
         this.state = state;
         this.paymentId = paymentId;
+        this.observation=observation;
         this.bills = bills != null ? new ArrayList<>(bills) : new ArrayList<>();
     }
 
     // Domain behavior: approve the refund
-    public void approve(Long approverId) {
+    public void approve() {
         if (this.state != RefundState.CREATED) {
             throw new InvalidRefundStateTransitionException(this.state, RefundState.APPROVED);
         }
-        if (approverId == null) throw new IllegalArgumentException("approverId must not be null");
-        this.approverId = approverId;
         this.state = RefundState.APPROVED;
     }
 
@@ -81,12 +81,12 @@ public class RefundOrder {
     }
 
     // Domain behavior: reject the refund
-    public void reject(Long approverId) {
+    public void reject(String observation) {
         if (this.state != RefundState.CREATED) {
             throw new InvalidRefundStateTransitionException(this.state, RefundState.REJECTED);
         }
-        if (approverId == null) throw new IllegalArgumentException("approverId must not be null");
-        this.approverId = approverId;
+
+        this.observation = observation;
         this.state = RefundState.REJECTED;
     }
 
@@ -117,6 +117,7 @@ public class RefundOrder {
     public Long getApproverId() { return approverId; }
     public RefundState getState() { return state; }
     public String getPaymentId() { return paymentId; }
+    public String getObservation() { return observation;}
 
     public String getEmployeeName() {
         return employeeName;

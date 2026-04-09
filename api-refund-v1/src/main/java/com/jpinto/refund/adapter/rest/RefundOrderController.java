@@ -1,9 +1,6 @@
 package com.jpinto.refund.adapter.rest;
 
-import com.jpinto.refund.application.dto.request.ApproveRefundRequest;
-import com.jpinto.refund.application.dto.request.CreateRefundOrderRequest;
-import com.jpinto.refund.application.dto.request.MarkPayRequest;
-import com.jpinto.refund.application.dto.request.RollbackStateRequest;
+import com.jpinto.refund.application.dto.request.*;
 import com.jpinto.refund.application.dto.response.RefundOrderResponse;
 import com.jpinto.refund.application.port.in.ChangeRefundStateUseCase;
 import com.jpinto.refund.application.port.in.CreateRefundOrderUseCase;
@@ -52,14 +49,13 @@ public class RefundOrderController {
     // ─── STATE TRANSITIONS ───────────────────────────────────────────────────
 
     @PutMapping("/{id}/approve")
-    public ResponseEntity<RefundOrderResponse> approve(@PathVariable UUID id,
-                                                       @RequestBody ApproveRefundRequest request) {
-        return ResponseEntity.ok(changeRefundStateUseCase.approveRefund(id, request));
+    public ResponseEntity<RefundOrderResponse> approve(@PathVariable UUID id) {
+        return ResponseEntity.ok(changeRefundStateUseCase.approveRefund(id));
     }
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<RefundOrderResponse> reject(@PathVariable UUID id,
-                                                      @RequestBody ApproveRefundRequest request) {
+                                                      @RequestBody RejectRefundRequest request) {
         return ResponseEntity.ok(changeRefundStateUseCase.rejectRefund(id, request));
     }
 

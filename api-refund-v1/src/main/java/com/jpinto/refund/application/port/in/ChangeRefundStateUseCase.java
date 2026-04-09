@@ -2,6 +2,7 @@ package com.jpinto.refund.application.port.in;
 
 import com.jpinto.refund.application.dto.request.ApproveRefundRequest;
 import com.jpinto.refund.application.dto.request.MarkPayRequest;
+import com.jpinto.refund.application.dto.request.RejectRefundRequest;
 import com.jpinto.refund.application.dto.response.RefundOrderResponse;
 import com.jpinto.refund.domain.model.RefundState;
 
@@ -9,9 +10,9 @@ import java.util.UUID;
 
 public interface ChangeRefundStateUseCase {
 
-    RefundOrderResponse approveRefund(UUID refundId, ApproveRefundRequest request);
+    RefundOrderResponse approveRefund(UUID refundId);
 
-    RefundOrderResponse rejectRefund(UUID refundId, ApproveRefundRequest request);
+    RefundOrderResponse rejectRefund(UUID refundId, RejectRefundRequest request);
 
     RefundOrderResponse registerPaymentOrder(UUID refundId, MarkPayRequest request);
 

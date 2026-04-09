@@ -77,3 +77,7 @@ eureka:
 
 jwt:
   secret: my-secret-key-for-jwt-generation-mitocode-123456789012345
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.security.access: DEBUG

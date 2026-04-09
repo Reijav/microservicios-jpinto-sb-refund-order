@@ -2,13 +2,17 @@ package com.jpinto.orchestator.controller;
 
 import com.jpinto.orchestator.client.refund.dto.ApproveRefundRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundOrderResponse;
+import com.jpinto.orchestator.client.refund.dto.RejectRefundRequest;
 import com.jpinto.orchestator.controller.document.OrdenReembolsoControllerDoc;
 import com.jpinto.orchestator.dto.ApprovedRefundResponse;
 import com.jpinto.orchestator.dto.CreateOrderRefundRequest;
+import com.jpinto.orchestator.dto.RejectRefundOrchestatorRequest;
 import com.jpinto.orchestator.services.ApproveOrderRefundWithCompensationService;
 import com.jpinto.orchestator.services.CreateOrderRefundOrchestetorService;
+import com.jpinto.orchestator.services.RejectOrderRefundOrchestatorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -26,6 +30,7 @@ import java.util.stream.Collectors;
 public class OrderRefundOrchestetorController implements OrdenReembolsoControllerDoc {
     private final CreateOrderRefundOrchestetorService orderRefundOrchestetorService;
     private final ApproveOrderRefundWithCompensationService approveOrderRefundWithCompensationService;
+    private final RejectOrderRefundOrchestatorService rejectOrderRefundOrchestatorService;
 
 
     @PostMapping()
@@ -51,17 +56,19 @@ public class OrderRefundOrchestetorController implements OrdenReembolsoControlle
     @PreAuthorize("hasAuthority('SUPERVISOR')")
     public ApprovedRefundResponse approveOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
         if(Objects.isNull(approveRefundRequest.orderRefundId())){
-            throw new RuntimeException("Error. id orden no válido");
+            throw new IllegalArgumentException("Error. id orden no válido");
         }
         return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
     }
 
+
+
     @PutMapping("/reject")
     @PreAuthorize("hasAuthority('SUPERVISOR')")
-    public ApprovedRefundResponse rejectOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest){
-        if(Objects.isNull(approveRefundRequest.orderRefundId())){
-            throw new RuntimeException("Error. id orden no válido");
+    public RefundOrderResponse rejectOrderRefund(@RequestBody RejectRefundOrchestatorRequest rejectRefundRequest){
+        if(Objects.isNull(rejectRefundRequest.orderRefundId())){
+            throw new IllegalArgumentException("Error. id orden no válido");
         }
-        return  approveOrderRefundWithCompensationService.aproveOrderRefund(approveRefundRequest);
+        return rejectOrderRefundOrchestatorService.rejectOrderRefund(rejectRefundRequest);
     }
 }

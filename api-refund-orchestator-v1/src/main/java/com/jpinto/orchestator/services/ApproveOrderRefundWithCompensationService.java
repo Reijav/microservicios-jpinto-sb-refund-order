@@ -1,12 +1,14 @@
 package com.jpinto.orchestator.services;
 
 import com.jpinto.orchestator.client.refund.dto.ApproveRefundRequest;
+import com.jpinto.orchestator.client.refund.dto.RejectRefundRequest;
 import com.jpinto.orchestator.dto.ApprovedRefundResponse;
 import com.jpinto.orchestator.exceptions.StopSagaException;
 import com.jpinto.orchestator.services.sagaapprove.ApproveOrderRefundSagaContext;
 import com.jpinto.orchestator.services.sagaapprove.SagaApproveStep;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +20,8 @@ import java.util.List;
 @Slf4j
 public class ApproveOrderRefundWithCompensationService {
     private final List<SagaApproveStep > steps;
+
+
     public ApprovedRefundResponse aproveOrderRefund(ApproveRefundRequest request){
 
         log.info("Starting approving process creation with compensations");
@@ -35,8 +39,9 @@ public class ApproveOrderRefundWithCompensationService {
             log.info("Order approved completed successfully with compensations");
             return ApprovedRefundResponse.builder().idOrderRefund(request.orderRefundId())
                     .idPayment(context.getPaymentResponse().id())
-                    .idTransactionAccount(context.getApproveRefundRequest().approverId())
                     .build();
+        }catch (AuthorizationDeniedException ex) {
+            throw  ex;
         } catch (Exception ex) {
 
             Collections.reverse(executedSteps);

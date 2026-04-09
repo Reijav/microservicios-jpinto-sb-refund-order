@@ -47,6 +47,9 @@ public class RefundOrderJpaEntity {
     @Column(name = "payment_id")
     private String paymentId;
 
+    @Column(name = "observation")
+    private String observation;
+
     @OneToMany(mappedBy = "refundOrder", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RefundBillJpaEntity> bills = new ArrayList<>();
 }

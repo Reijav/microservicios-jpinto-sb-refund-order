@@ -22,6 +22,7 @@ public class RefundOrderJpaMapper {
         entity.setApproverId(domain.getApproverId());
         entity.setState(domain.getState());
         entity.setPaymentId(domain.getPaymentId());
+        entity.setObservation(domain.getObservation());
 
         List<RefundBillJpaEntity> billEntities = domain.getBills().stream()
                 .map(bill -> toBillJpaEntity(bill, entity))
@@ -61,6 +62,7 @@ public class RefundOrderJpaMapper {
                 null,
                 entity.getState(),
                 entity.getPaymentId(),
+                entity.getObservation(),
                 bills
         );
     }

@@ -19,7 +19,7 @@ public class ApproveOrderStep implements SagaApproveStep {
     @Override
     public void execute(ApproveOrderRefundSagaContext context) {
         log.info("## APPROVE ORDER ## 2. Cambio de estado de Orden de reembolso");
-        orderRefundService.approve(context.getApproveRefundRequest().orderRefundId(), context.getApproveRefundRequest() );
+        orderRefundService.approve(context.getApproveRefundRequest().orderRefundId());
     }
 
     @Override

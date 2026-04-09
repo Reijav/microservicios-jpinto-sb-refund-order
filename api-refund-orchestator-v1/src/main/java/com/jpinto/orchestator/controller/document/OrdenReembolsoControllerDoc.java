@@ -4,6 +4,7 @@ import com.jpinto.orchestator.client.refund.dto.ApproveRefundRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundOrderResponse;
 import com.jpinto.orchestator.dto.ApprovedRefundResponse;
 import com.jpinto.orchestator.dto.CreateOrderRefundRequest;
+import com.jpinto.orchestator.dto.RejectRefundOrchestatorRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -101,7 +103,6 @@ public interface OrdenReembolsoControllerDoc {
     @Operation(
             summary = "Rechazar orden de reembolso",
             description = "Rechaza una orden de reembolso existente, revertiendo su estado al estado previo. " +
-                    "Implementa compensación automática (SAGA) en caso de fallo. " +
                     "**Rol requerido:** SUPERVISOR"
     )
     @ApiResponses(value = {
@@ -110,7 +111,7 @@ public interface OrdenReembolsoControllerDoc {
                     description = "Orden de reembolso rechazada exitosamente",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ApprovedRefundResponse.class)
+                            schema = @Schema(implementation = RejectRefundOrchestatorRequest.class)
                     )
             ),
             @ApiResponse(
@@ -134,5 +135,6 @@ public interface OrdenReembolsoControllerDoc {
                     content = @Content(mediaType = "application/json")
             )
     })
-    ApprovedRefundResponse rejectOrderRefund(@RequestBody ApproveRefundRequest approveRefundRequest);
+    RefundOrderResponse rejectOrderRefund(@RequestBody RejectRefundOrchestatorRequest rejectRefundRequest);
+
 }

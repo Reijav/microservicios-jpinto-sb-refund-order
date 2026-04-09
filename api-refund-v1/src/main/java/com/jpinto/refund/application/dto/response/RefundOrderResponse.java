@@ -16,5 +16,6 @@ public record RefundOrderResponse(
         Long approverId,
         RefundState state,
         String paymentId,
+        String observation,
         List<RefundBillResponse> bills
 ) {}

@@ -4,6 +4,7 @@ import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -97,6 +98,15 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage(), ex);
         ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Employee not found");
+        problem.setDetail(ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ProblemDetail handlerAuthorizationDeniedException(AuthorizationDeniedException ex) {
+        log.error(ex.getMessage(), ex);
+        ProblemDetail problem = ProblemDetail.forStatus(HttpStatus.FORBIDDEN);
+        problem.setTitle("Recurso no permitido");
         problem.setDetail(ex.getMessage());
         return problem;
     }

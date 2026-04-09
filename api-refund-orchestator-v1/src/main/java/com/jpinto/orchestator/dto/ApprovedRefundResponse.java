@@ -12,5 +12,4 @@ import java.util.UUID;
 public class ApprovedRefundResponse {
     private UUID idOrderRefund;
     private UUID idPayment;
-    private Long idTransactionAccount;
 }

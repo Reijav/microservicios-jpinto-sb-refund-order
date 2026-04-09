@@ -3,6 +3,7 @@ package com.jpinto.refund.application.service;
 import com.jpinto.refund.application.dto.request.ApproveRefundRequest;
 import com.jpinto.refund.application.dto.request.MarkPayRequest;
 import com.jpinto.refund.application.dto.request.Payment;
+import com.jpinto.refund.application.dto.request.RejectRefundRequest;
 import com.jpinto.refund.application.dto.response.RefundOrderResponse;
 import com.jpinto.refund.application.mapper.RefundOrderMapper;
 import com.jpinto.refund.application.port.in.ChangeRefundStateUseCase;
@@ -27,9 +28,9 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
 
 
     @Override
-    public RefundOrderResponse approveRefund(UUID refundId, ApproveRefundRequest request) {
+    public RefundOrderResponse approveRefund(UUID refundId) {
         RefundOrder order = findOrThrow(refundId);
-        order.approve(request.approverId());
+        order.approve();
         return RefundOrderMapper.toResponse(refundOrderRepository.save(order));
     }
 
@@ -41,9 +42,9 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
     }
 
     @Override
-    public RefundOrderResponse rejectRefund(UUID refundId, ApproveRefundRequest request) {
+    public RefundOrderResponse rejectRefund(UUID refundId, RejectRefundRequest request) {
         RefundOrder order = findOrThrow(refundId);
-        order.reject(request.approverId());
+        order.reject(request.observation());
         return RefundOrderMapper.toResponse(refundOrderRepository.save(order));
     }
 

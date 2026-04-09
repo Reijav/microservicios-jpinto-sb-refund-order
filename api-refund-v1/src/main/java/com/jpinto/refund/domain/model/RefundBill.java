@@ -14,6 +14,7 @@ public class RefundBill {
     private final BigDecimal value;
     private final String billFile;
 
+
     public RefundBill(UUID id, UUID refundId, String providerRuc, String providerName,
                       String billNumber, String detail, BigDecimal value, String billFile) {
         if (providerRuc == null || providerRuc.isBlank()) throw new IllegalArgumentException("providerRuc must not be blank");

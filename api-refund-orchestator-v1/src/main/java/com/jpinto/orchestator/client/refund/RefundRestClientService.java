@@ -41,17 +41,16 @@ public class RefundRestClientService {
                 .body(RefundOrderResponse.class);
     }
 
-    public RefundOrderResponse approve( UUID id,  ApproveRefundRequest request) {
+    public RefundOrderResponse approve( UUID id) {
         log.info("Calling approve order.");
         return refundRestClient.put().
                 uri("/refund-orders/{id}/approve", id).
-                body(request).
                 retrieve().body(RefundOrderResponse.class);
 
     }
 
 
-    public RefundOrderResponse reject( UUID id,ApproveRefundRequest request) {
+    public RefundOrderResponse reject( UUID id,RejectRefundRequest request) {
         log.info("Calling reject order refund.");
         return refundRestClient.put().
                 uri("/refund-orders/{id}/reject", id).
