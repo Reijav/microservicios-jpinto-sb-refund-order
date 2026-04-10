@@ -12,6 +12,7 @@ import com.jpinto.refund.domain.model.RefundOrder;
 import com.jpinto.refund.domain.model.RefundState;
 import com.jpinto.refund.domain.repository.RefundOrderRepository;
 import com.jpinto.refund.producer.order.approved.OrderRefundApprovedProducer;
+import com.jpinto.refund.producer.order.rejected.OrderRefundRejectedProducter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +26,7 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
 
     private final RefundOrderRepository refundOrderRepository;
     private final OrderRefundApprovedProducer orderRefundApprovedProducer;
-
+    private final OrderRefundRejectedProducter orderRefundRejectedProducter;
 
     @Override
     public RefundOrderResponse approveRefund(UUID refundId) {
@@ -45,7 +46,9 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
     public RefundOrderResponse rejectRefund(UUID refundId, RejectRefundRequest request) {
         RefundOrder order = findOrThrow(refundId);
         order.reject(request.observation());
-        return RefundOrderMapper.toResponse(refundOrderRepository.save(order));
+        var refundOrderJpa= refundOrderRepository.save(order);
+        orderRefundRejectedProducter.produce(order.getId().toString(), request.observation());
+        return RefundOrderMapper.toResponse(refundOrderJpa);
     }
 
     @Override

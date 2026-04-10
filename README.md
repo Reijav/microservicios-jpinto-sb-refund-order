@@ -4,33 +4,33 @@ Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud** 
 
 ## Flujo del Proceso
 1. **Registro de órden de reembolso.**
-   1.1. Ingreso de la orden de reembolso y sus detalles.
-   1.2. Consulta de datos de supervisor.
-   1.2. Notificación a supervisor para la aprobación de la orden de reembolso.
+   - Ingreso de la orden de reembolso y sus detalles.
+   - Consulta de datos de supervisor.
+   - Notificación a supervisor para la aprobación de la orden de reembolso.
 
 2. **Aprobación de órden de reembolso (Implementación de SAGA).**
-   2.2. Validación datos ingresados (Carga de datos: Empleado, Supervisor, Orden de Reembolso)
-   2.3. Verificación de que la orden de reembolso debe ser aprobada por usuario logeado.
-   2.4. Cambio de estado de la orden de reembolso (ORDERPAYGENERATED).
-   2.5. Creación de registro de pago (CREATED).
-   2.6. Notificación de orden de reembolso aprobada.
+   - Validación datos ingresados (Carga de datos: Empleado, Supervisor, Orden de Reembolso)
+   - Verificación de que la orden de reembolso debe ser aprobada por usuario logeado.
+   - Cambio de estado de la orden de reembolso (ORDERPAYGENERATED).
+   - Creación de registro de pago (CREATED).
+   - Notificación de orden de reembolso aprobada.
 
 3. **Liquidación del valor de la órden de reembolso (Implementación de SAGA).**
-   3.1.	Validación datos ingresados.
-   3.2. Creación de asiento contable en base al pago de la orden de reembolso.
-   3.3. Procesar pago (Cambio de estado a PROCESSED)
-   3.4. Cambio de estado de la Orden de Pago a PAYED.
-   3.5. Notificación de liquidación realizada.
+   -	Validación datos ingresados.
+   - Creación de asiento contable en base al pago de la orden de reembolso.
+   - Procesar pago (Cambio de estado a PROCESSED)
+   - Cambio de estado de la Orden de Pago a PAYED.
+   - Notificación de liquidación realizada.
 
 4. **Rechazo de órden de reembolso.**
-   4.1. Validación existencia de orden de reembolso y datos requeridos para el rechazo.
-   4.2. Cambio de estado a REJECT.
-   4.3. Notificación de orden de reembolso rechazada.
+   - Validación existencia de orden de reembolso y datos requeridos para el rechazo.
+   - Cambio de estado a REJECT.
+   - Notificación de orden de reembolso rechazada.
 
 ## Microservicios Implementados.
 
 - **api-accounting-v1**: Api de contabilidad para registrar las transacciones o asientos contables que se generan al realizar un pago de unan orden de reembolso.
-- **api-auth-service-v1**: Api para la autenticación de usuarios.
+- **api-auth-service-v1**: Api para la autenticación de usuarios, creación de tokens, validación de token.
 - **api-eureka-server-v1**: Servidor de descubrimiento de servicios.
 - **api-notification-v1**: Api que emula el envio de notificaciones según el registro de orden de reembolso.
 - **api-payment-v1**: Api que registra los pagos a procesar y los procesados en el flujo de liquidación de gastos.
@@ -41,7 +41,7 @@ Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud** 
 
 ## Instrucciones de Ejecución
 
-1. Abrir proyecto en Intellij (Carpeta principal)
+1. Descargar y abrir proyecto en Intellij (Carpeta principal)
 2. Importar archivo json de postman (./Documentacion/TRABAJO FINAL CURSO MICROSERVICIOS JAVIER PINTO.postman_collection.json)
 3. Ejecutar comando, para crear red en docker .
 
@@ -62,7 +62,7 @@ docker-compose --profile core up
 
 7. Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden.
 
-    7.1. /API-AUTH/Login User  - Logearse con usuario con rol EMPLEADO.
+    7.1. /API-AUTH/Login User Employee  - Logearse con usuario con rol EMPLEADO.
 
     7.2. /API ORCHESTATOR/CREATE ORDER REFUND
 
