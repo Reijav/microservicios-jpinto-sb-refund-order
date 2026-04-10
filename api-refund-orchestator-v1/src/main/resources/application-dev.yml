@@ -1,37 +1,41 @@
-#http-clients:
-#  internal:
-#    api-refund-v1:
-#      base-url: http://api-refund-v1/api-refunds
-#      timeout: 5s
-#    api-talenthuman-v1:
-#      base-url: http://api-talent-human-v1/api-talent-human
-#      timeout: 5s
-#    api-payment-v1:
-#      base-url: http://api-payment-v1/api-payment
-#      timeout: 5s
-#    api-notification-v1:
-#      base-url: http://api-notification-v1/api-notification
-#      timeout: 5s
-#    api-accounting-v1:
-#      base-url: http://api-accounting-v1/api-accounting
-#      timeout: 5s
 http-clients:
   internal:
     api-refund-v1:
-      base-url: http://localhost:50000/api-refunds
+      base-url: http://api-refund-v1/api-refunds
       timeout: 5s
     api-talenthuman-v1:
-      base-url: http://localhost:50005/api-talent-human
+      base-url: http://api-talent-human-v1/api-talent-human
       timeout: 5s
     api-payment-v1:
-      base-url: http://localhost:50007/api-payment
+      base-url: http://api-payment-v1/api-payment
       timeout: 5s
     api-notification-v1:
-      base-url: http://localhost:50006/api-notification
+      base-url: http://api-notification-v1/api-notification
       timeout: 5s
     api-accounting-v1:
-      base-url: http://localhost:50001/api-accounting
+      base-url: http://api-accounting-v1/api-accounting
       timeout: 5s
+
+
+#http-clients:
+#  internal:
+#    api-refund-v1:
+#      base-url: http://localhost:50000/api-refunds
+#      timeout: 5s
+#    api-talenthuman-v1:
+#      base-url: http://localhost:50005/api-talent-human
+#      timeout: 5s
+#    api-payment-v1:
+#      base-url: http://localhost:50007/api-payment
+#      timeout: 5s
+#    api-notification-v1:
+#      base-url: http://localhost:50006/api-notification
+#      timeout: 5s
+#    api-accounting-v1:
+#      base-url: http://localhost:50001/api-accounting
+#      timeout: 5s
+
+
 #  external:
 #    api-visa-v1:
 #      base-url: http://localhost:52010/api/visa
@@ -45,13 +49,13 @@ resilience4j:
         slidingWindowSize: 10               # Número de llamadas consideradas en la "ventana deslizante" para calcular el estado (CLOSED/HALF-OPEN/OPEN)
         failureRateThreshold: 50            # Porcentaje de fallos (0-100) para abrir el circuito. Ej: 50 significa que si 50% de llamadas fallan, se abre
         waitDurationInOpenState: 10s         # Tiempo que el circuito permanece abierto antes de pasar a HALF-OPEN para probar si el servicio ya se recuperó
-        permittedNumberOfCallsInHalfOpenState: 3   # Cantidad de llamadas permitidas cuando está en HALF-OPEN para evaluar si el servicio funciona de nuevo
+        permittedNumberOfCallsInHalfOpenState: 2   # Cantidad de llamadas permitidas cuando está en HALF-OPEN para evaluar si el servicio funciona de nuevo
         minimumNumberOfCalls: 5             # Mínimo de llamadas necesarias antes de evaluar si debe abrirse el circuito (para evitar decisiones con pocos datos)
 
   retry:
     instances:
       defaultRetry: # Nombre que nosotros definimos
-        max-attempts: 5          # Número máximo de intentos
+        max-attempts: 3          # Número máximo de intentos
         wait-duration: 1s        # Tiempo de espera entre intentos, despues de que termina la ejecución fallida
         #retry-exceptions:
         #  - com.mitocode.orchestrator.exception.ServiceUnavailableException  # Tipos de excepciones que van a disparar el retry
@@ -74,6 +78,8 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
     register-with-eureka: true
     fetch-registry: true
+  instance:
+    prefer-ip-address: true
 
 jwt:
   secret: my-secret-key-for-jwt-generation-mitocode-123456789012345

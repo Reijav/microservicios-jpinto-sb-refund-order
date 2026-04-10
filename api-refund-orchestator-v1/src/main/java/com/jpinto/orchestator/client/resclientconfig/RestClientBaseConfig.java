@@ -15,7 +15,7 @@ public class RestClientBaseConfig {
 
     //Usamos @LoadBalanced para que esta RestClient.Builder pueda resolver nombres de servicios registrados en Eureka
     @Bean("loadBalancedRestClientBuilder")
-    //@LoadBalanced
+    @LoadBalanced
     public RestClient.Builder loadBalancedRestClientBuilder(
            // ObservationRegistry observationRegistry
            // ,         ObjectProvider<JwtPropagationInterceptor> jwtInterceptorProvider
