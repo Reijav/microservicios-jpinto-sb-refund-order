@@ -36,12 +36,6 @@ http-clients:
 #      timeout: 5s
 
 
-#  external:
-#    api-visa-v1:
-#      base-url: http://localhost:52010/api/visa
-#      timeout: 5s
-
-
 resilience4j:
   circuitbreaker:
     instances:

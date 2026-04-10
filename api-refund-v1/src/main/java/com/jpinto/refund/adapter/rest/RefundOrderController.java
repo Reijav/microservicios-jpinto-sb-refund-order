@@ -5,13 +5,16 @@ import com.jpinto.refund.application.dto.response.RefundOrderResponse;
 import com.jpinto.refund.application.port.in.ChangeRefundStateUseCase;
 import com.jpinto.refund.application.port.in.CreateRefundOrderUseCase;
 import com.jpinto.refund.application.port.in.GetRefundOrderUseCase;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/refund-orders")
 public class RefundOrderController {
@@ -31,7 +34,11 @@ public class RefundOrderController {
     // ─── CRUD ────────────────────────────────────────────────────────────────
 
     @PostMapping
-    public ResponseEntity<RefundOrderResponse> create(@RequestBody CreateRefundOrderRequest request) {
+    public ResponseEntity<RefundOrderResponse> create(@RequestBody CreateRefundOrderRequest request,@RequestHeader Map<String, String> headers) {
+        headers.forEach((key, value) -> {
+            log.info(String.format("Header '%s' = %s", key, value));
+        });
+
         RefundOrderResponse response = createRefundOrderUseCase.createRefundOrder(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

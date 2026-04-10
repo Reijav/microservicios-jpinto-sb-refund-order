@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +41,7 @@ public class ApproveOrderRefundWithCompensationService {
             return ApprovedRefundResponse.builder().idOrderRefund(request.orderRefundId())
                     .idPayment(context.getPaymentResponse().id())
                     .build();
-        }catch (AuthorizationDeniedException ex) {
+        }catch (AuthorizationDeniedException  ex) {
             throw  ex;
         } catch (Exception ex) {
 
