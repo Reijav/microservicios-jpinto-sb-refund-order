@@ -1,9 +1,5 @@
 package com.jpinto.refund.producer.order.rejected;
 
-import com.jpinto.refund.domain.model.RefundOrder;
-import com.jpinto.refund.producer.order.created.event.Employee;
-import com.jpinto.refund.producer.order.created.event.RefundOrderCreatedEvent;
-import com.jpinto.refund.producer.order.created.event.Supervisor;
 import com.jpinto.refund.producer.order.rejected.event.RefundOrderRejectedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

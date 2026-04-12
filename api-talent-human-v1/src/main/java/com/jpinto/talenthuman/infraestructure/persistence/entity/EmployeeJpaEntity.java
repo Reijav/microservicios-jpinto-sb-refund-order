@@ -1,13 +1,15 @@
 package com.jpinto.talenthuman.infraestructure.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "employee")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class EmployeeJpaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

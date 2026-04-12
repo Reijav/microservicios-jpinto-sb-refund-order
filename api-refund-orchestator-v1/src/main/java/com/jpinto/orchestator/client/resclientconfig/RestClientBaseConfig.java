@@ -22,8 +22,8 @@ public class RestClientBaseConfig {
     ) {
 
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
-        factory.setConnectTimeout(1000); //Cuánto tiempo espero para “conectarme” al servidor.
-        factory.setReadTimeout(1000); //Cuánto tiempo espero a que el servidor me responda después de conectarme.
+        factory.setConnectTimeout(2000); //Cuánto tiempo espero para “conectarme” al servidor.
+        factory.setReadTimeout(2000); //Cuánto tiempo espero a que el servidor me responda después de conectarme.
 
         // ObservationRegistry es lo que realmente propaga el traceId
         RestClient.Builder builder = RestClient.builder()

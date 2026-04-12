@@ -1,17 +1,5 @@
-#Instalar docker y docker-compose
-#Crear network
-#docker network create ms-trabajo-final-jpinto
-#Levantar servicios core con el siguiente comando, solo si estamos en la raiz del proyecto:
-# docker-compose --file docker/docker-compose.yml --profile core up
-
-#Levantar servicios si estoy dentro de la carpeta docker
-# docker-compose --profile core --file docker-compose.yml up
-
-#Depende la version de docker-compose que tengas instalado, puede que necesites usar "docker compose" en lugar de "docker-compose"
-
 services:
   postgres-auth-v1:
-    profiles: ["core"]
     image: postgres:15
     container_name: postgres-auth-v1
     restart: always
@@ -27,7 +15,6 @@ services:
       - ms-trabajo-final-jpinto
 
   postgres-accounting-v1:
-    profiles: ["core"]
     image: postgres:15
     container_name: postgres-order-v1
     restart: always
@@ -43,7 +30,6 @@ services:
       - ms-trabajo-final-jpinto
 
   postgres-payment-v1:
-    profiles: ["core"]
     image: postgres:15
     container_name: postgres-payment-v1
     restart: always
@@ -59,7 +45,6 @@ services:
       - ms-trabajo-final-jpinto
 
   postgres-refund-v1:
-    profiles: ["core"]
     image: postgres:15
     container_name: postgres-payment-v2
     restart: always
@@ -75,7 +60,6 @@ services:
       - ms-trabajo-final-jpinto
 
   postgres-talent-human-v1:
-    profiles: ["core"]
     image: postgres:15
     container_name: postgres-talenthuman-v1
     restart: always
@@ -91,21 +75,7 @@ services:
       - ms-trabajo-final-jpinto
 
 
-  api-config-server-v1:
-    profiles: ["nouse"]
-    build:
-      context: ../api-config-server-v1
-      dockerfile: Dockerfile
-    container_name: api-config-server-v1
-    ports:
-      - "8888:8888"
-    environment:
-      - SPRING_PROFILES_ACTIVE=config-server
-    networks:
-      - ms-trabajo-final-jpinto
-
   api-eureka-server-v1:
-    profiles: ["core"]
     build:
       context: ../api-eureka-server-v1
       dockerfile: Dockerfile
@@ -116,7 +86,6 @@ services:
       - ms-trabajo-final-jpinto
 
   zookeeper:
-    profiles: ["core"]
     image: confluentinc/cp-zookeeper:7.4.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -127,7 +96,6 @@ services:
       - ms-trabajo-final-jpinto
 
   kafka:
-    profiles: ["core"]
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
     depends_on:
@@ -147,7 +115,6 @@ services:
       - ms-trabajo-final-jpinto
 
   mongodb_order_read:
-    profiles: ["core"]
     image: mongo:7.0  # puedes usar otra versión si quieres
     container_name: mongodb_order_read
     ports:
@@ -162,65 +129,7 @@ services:
     networks:
       - ms-trabajo-final-jpinto
 
-  prometheus:
-    profiles: ["nouse"]
-    image: prom/prometheus
-    container_name: prometheus
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    ports:
-      - "9090:9090"
-    networks:
-      - ms-trabajo-final-jpinto
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  grafana:
-    profiles: ["nouse"]
-    image: grafana/grafana
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-    networks:
-      - ms-trabajo-final-jpinto
-#Levantar un servicio especifico de todo el compose
-#docker-compose --file docker/docker-compose.yml --profile core up jaeger
-#docker compose -f docker/docker-compose.yml -p docker up -d jaeger
-  jaeger:
-    profiles: ["nouse"]
-    image: jaegertracing/all-in-one:1.53
-    container_name: jaeger
-    ports:
-      - "16686:16686"  # UI Web
-      - "6831:6831/udp" # UDP para recibir trazas
-      - "4318:4318"
-      - "4317:4317"
-    environment:
-      - COLLECTOR_ZIPKIN_HTTP_PORT=9411
-    networks:
-      - ms-trabajo-final-jpinto
-
-  keycloak:
-    profiles: ["nouse"]
-    image: quay.io/keycloak/keycloak:21.1.1
-    container_name: keycloak
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    command: start-dev
-    ports:
-      - "52020:8080"
-    volumes:
-      - keycloak_data:/opt/keycloak/data
-    restart: unless-stopped
-    networks:
-      - ms-trabajo-final-jpinto
-
   portainer:
-    profiles: ["core"]
     image: portainer/portainer-ce:latest
     container_name: portainer
     ports:
@@ -228,17 +137,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-    networks:
-      - ms-trabajo-final-jpinto
-
-  redis:
-    profiles: ["nouse"]
-    image: redis:7.2
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
     networks:
       - ms-trabajo-final-jpinto
 
