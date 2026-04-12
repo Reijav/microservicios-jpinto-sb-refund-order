@@ -142,7 +142,7 @@ El proyecto se trata del flujo para el reeembolso de gastos para empleados. El p
    - **api-auth-service-v1**:  authdb(users, users_roles) - se agregan 5 usuarios con sus roles (supervisor, 3 empleados, 1 contador).
    - **api-talent-human-v1**: talenthumandb(employee) - se agregan 5 empleados que hacen referencia a los usuarios de authdb campo (user_id). 
 
-### PROCESO (CREACIÓN-APROBACIÓN-PAGO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
+## PROCESO (CREACIÓN-APROBACIÓN-PAGO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
 
 1. /API-AUTH/Login Employee  - Logearse con usuario con rol EMPLEADO.
     ![Login Empleado](/Documentacion/Pantallas/01%20Login%20Empleado.png)
@@ -175,7 +175,7 @@ El proyecto se trata del flujo para el reeembolso de gastos para empleados. El p
     ![Consulta Orden Pagada](/Documentacion/Pantallas/10%20API%20QUERY%20ORDER%20REFUND.png)
 
 
-### PROCESO (CREACIÓN-RECHAZO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
+## PROCESO (CREACIÓN-RECHAZO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
     
 1. /API-AUTH/Login Employee  - Logearse con usuario con rol EMPLEADO.
         ![Login Empleado](/Documentacion/Pantallas/01%20Login%20Empleado.png)
@@ -192,8 +192,8 @@ El proyecto se trata del flujo para el reeembolso de gastos para empleados. El p
 5. Logs de rechazo de orden de reembolso.
    ![Logs Rechazo Orden Reembolso](/Documentacion/Pantallas/13%20Log%20%20Reject%20Order%20Refund.png)
 
-### PROCESO (CREACION-APROBACION-COMPENSACION EN PAGO)
-#### Modificar property produce.mark-process-error a true en proyecto api-refund-v1 (archivo application-dev.yml)
+## PROCESO (CREACION-APROBACION-COMPENSACION EN PAGO)
+### Modificar property produce.mark-process-error a true en proyecto api-refund-v1 (archivo application-dev.yml)
 ```yml
 produce:
     mark-process-error: true
