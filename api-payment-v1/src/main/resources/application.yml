@@ -33,4 +33,4 @@ server:
 logging:
   level:
     com.jpinto.payment: DEBUG
-    org.springframework.web: INFO
+    org.springframework.web: ERROR

@@ -14,6 +14,7 @@ import com.jpinto.refund.domain.repository.RefundOrderRepository;
 import com.jpinto.refund.producer.order.approved.OrderRefundApprovedProducer;
 import com.jpinto.refund.producer.order.rejected.OrderRefundRejectedProducter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +28,8 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
     private final RefundOrderRepository refundOrderRepository;
     private final OrderRefundApprovedProducer orderRefundApprovedProducer;
     private final OrderRefundRejectedProducter orderRefundRejectedProducter;
+    @Value("${produce.mark-process-error}")
+    private Boolean markProcessError;
 
     @Override
     public RefundOrderResponse approveRefund(UUID refundId) {
@@ -63,9 +66,23 @@ public class ChangeRefundStateService implements ChangeRefundStateUseCase {
     }
 
     @Override
+    public RefundOrderResponse registerPaymentOrderByCompensation(UUID refundId, MarkPayRequest request) {
+        RefundOrder order = findOrThrow(refundId);
+        order.generatePaymentOrderByCompensation(request.payment().id());
+        var response= RefundOrderMapper.toResponse(refundOrderRepository.save(order));
+        orderRefundApprovedProducer.produce(order, new Payment(request.payment().id(), request.payment().payeeType(),
+                request.payment().amount(), request.payment().paymentMethod(), request.payment().paymentDate(), request.payment().transactionId(),
+                request.payment().state(), request.payment().bank(), request.payment().savingAccount()));
+        return response;
+    }
+
+    @Override
     public RefundOrderResponse markAsPayed(UUID refundId) {
         RefundOrder order = findOrThrow(refundId);
         order.markAsPayed();
+        if(markProcessError){
+            throw new IllegalArgumentException("Error produce para ejemplo SAGA");
+        }
         return RefundOrderMapper.toResponse(refundOrderRepository.save(order));
     }
 

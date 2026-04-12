@@ -12,3 +12,6 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.access: DEBUG
+apply:
+  timeout: false
+  randomerror: false

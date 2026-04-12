@@ -34,6 +34,7 @@ public class GlobalExceptionHandler {
         problem.setTitle("Validation Failed");
         problem.setDetail("One or more fields are invalid");
         problem.setProperty("errors", errors);
+        log.error(problem.getTitle(), problem.getDetail());
         return problem;
     }
 

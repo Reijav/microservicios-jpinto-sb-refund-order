@@ -68,6 +68,15 @@ public class RefundRestClientService {
                 retrieve().body(RefundOrderResponse.class);
     }
 
+    public RefundOrderResponse generatePaymentOrderByCompensation(UUID id, MarkAsPayedRequest request) {
+        log.info("Calling generate payment order by compensation.");
+        return refundRestClient.put().
+                uri("/refund-orders/{id}/generate-payment-order-compensation", id.toString()).
+                body(request).
+                retrieve().body(RefundOrderResponse.class);
+    }
+
+
 
     public RefundOrderResponse markAsPayed(UUID id) {
         return refundRestClient.put().

@@ -49,6 +49,10 @@ public class OrderRefundService {
         return refundRestClientService.generatePaymentOrder(id, request);
     }
 
+    public RefundOrderResponse generatePaymentOrderByCompensation(UUID id, MarkAsPayedRequest request) {
+        return refundRestClientService.generatePaymentOrderByCompensation(id, request);
+    }
+
     public RefundOrderResponse markAsPayed(UUID id) {
         return refundRestClientService.markAsPayed(id);
     }

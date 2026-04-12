@@ -1,5 +1,6 @@
 package com.jpinto.orchestator.services.sagaapprove;
 
+import com.jpinto.orchestator.client.notification.dto.RequestSendMail;
 import com.jpinto.orchestator.client.payment.dto.CreatePaymentRequest;
 import com.jpinto.orchestator.client.payment.dto.PayeeType;
 import com.jpinto.orchestator.client.payment.dto.Payment;
@@ -7,6 +8,7 @@ import com.jpinto.orchestator.client.payment.dto.PaymentMethod;
 import com.jpinto.orchestator.client.refund.dto.MarkAsPayedRequest;
 import com.jpinto.orchestator.client.refund.dto.RefundState;
 import com.jpinto.orchestator.client.refund.dto.RollbackStateRequest;
+import com.jpinto.orchestator.services.NotificationService;
 import com.jpinto.orchestator.services.OrderRefundService;
 import com.jpinto.orchestator.services.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -24,6 +27,7 @@ import java.util.Objects;
 public class CreatePaymentOrderStep implements  SagaApproveStep{
     private final PaymentService paymentService;
     private final OrderRefundService orderRefundService;
+    private final NotificationService notificationService;
 
     @Override
     public void execute(ApproveOrderRefundSagaContext context) {
@@ -41,6 +45,16 @@ public class CreatePaymentOrderStep implements  SagaApproveStep{
                                                                                             context.getPaymentResponse().state().name(),
                                                                                             context.getEmpleado().getBank(),
                                                                                             context.getEmpleado().getAccountNumber())));
+
+        try{
+            notificationService.encolarEnvioHtmlMail(RequestSendMail.builder()
+                    .subjet("Nueva orden de reembolso por revisar")
+                    .toEmail(List.of(context.getEmpleado().getEmail()))
+                    .body(String.format("Orden de reembolso %s aprobada para liquidación. En proceso de liquidación continua en el area contable.", context.getRefundOrderResponse().id().toString()))
+                    .build());
+        }catch (Exception ex){
+            log.error(ex.getMessage(), ex);
+        }
     }
 
     @Override

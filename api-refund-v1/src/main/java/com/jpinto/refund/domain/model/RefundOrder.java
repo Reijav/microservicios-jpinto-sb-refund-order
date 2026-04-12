@@ -100,6 +100,15 @@ public class RefundOrder {
         this.state = RefundState.ORDERPAYGENERATED;
     }
 
+    // Domain behavior: generate payment order by compensation
+    public void generatePaymentOrderByCompensation(String paymentId) {
+        if (this.state != RefundState.ORDERPAYGENERATED) {
+            throw new RuntimeException("Generacion de pago si no se encuentra en estado ORDERPAYGENERATED");
+        }
+        if (paymentId == null || paymentId.isBlank()) throw new IllegalArgumentException("paymentId must not be blank");
+        this.paymentId=paymentId;
+    }
+
     // Domain behavior: mark as payed
     public void markAsPayed() {
         if (this.state != RefundState.ORDERPAYGENERATED) {

@@ -30,6 +30,6 @@ public class ValidationDataStep implements SagaPaymentStep{
 
     @Override
     public void compensate(PaymentSagaContext context) {
-        log.info("## PAYMENT ORDER ## 1. (Compensación) Charging data to pay order refund.");
+        log.info("## PAYMENT ORDER ## 1. (Compensación) Charging data to pay order refund. DO NOTHING");
     }
 }

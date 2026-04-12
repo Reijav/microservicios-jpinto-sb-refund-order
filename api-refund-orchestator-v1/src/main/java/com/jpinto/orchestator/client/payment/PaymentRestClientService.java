@@ -36,6 +36,7 @@ public class PaymentRestClientService {
     }
 
 
+
     public PaymentResponse process(String id, ProcessPaymentDto processPaymentDto ) {
         log.info("Calling process payment.");
         return paymentRestClient.put().uri("/payments/{id}/process", id).body(processPaymentDto).retrieve().body(PaymentResponse.class);

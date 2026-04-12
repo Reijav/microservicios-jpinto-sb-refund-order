@@ -1,6 +1,6 @@
 # IMPLEMENTACIÓN DE MICROSERVICIOS EN UN SISTEMA DE LIQUIDACIÓN DE GASTOS PARA EMPLEADOS
 
-Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud** . El proyecto se trata del flujo para la liquidación de gastos para empleados, implementando microservicios con Spring Cloud.
+Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud**. El proyecto se trata del flujo para la liquidación de gastos para empleados, implementando microservicios con Spring Cloud.
 
 ## Flujo del Proceso
 1. **Registro de órden de reembolso.**
@@ -15,7 +15,7 @@ Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud** 
    - Creación de registro de pago (CREATED).
    - Notificación de orden de reembolso aprobada.
 
-3. **Liquidación del valor de la órden de reembolso (Implementación de SAGA).**
+3. **Liquidación(Pago) del valor de la órden de reembolso (Implementación de SAGA).**
    -	Validación datos ingresados.
    - Creación de asiento contable en base al pago de la orden de reembolso.
    - Procesar pago (Cambio de estado a PROCESSED)
@@ -39,16 +39,16 @@ Se presenta el trabajo final del Curso de   **Microservicios con Spring Cloud** 
 - **api-refund-v1**: Api que permite el registro de las ordenes de reembolso, su cambio de estados.
 - **api-talent-human-v1**: Api que permite ver la información de los empleados (emails, cuentas de ahorros, nombres, id de usuario).
 
-## Instrucciones de Ejecución
+## Instrucciones de Levantamiento de Infraestructura.
 
-1. Descargar y abrir proyecto en Intellij (Carpeta principal)
+1. Descargar y abrir proyecto en Intellij (Carpeta principal). Cargar proyectos Maven. Ejecutar cada api desde IDE Intellij.
 2. Importar archivo json de postman (./Documentacion/TRABAJO FINAL CURSO MICROSERVICIOS JAVIER PINTO.postman_collection.json)
 3. Ejecutar comando, para crear red en docker .
 
 ```terminaloutput
 docker network create ms-trabajo-final-jpinto
 ```
-4. Ejecutar comando, para levantar ambiente
+4. Ingresar a la carpeta /docker por la terminal y Ejecutar el siguiente comando, para levantar ambiente
 ```terminaloutput
 docker-compose --profile core up
 ```
@@ -60,21 +60,48 @@ docker-compose --profile core up
     - Registro de cuentas
 
 
-7. Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden.
+7. PROCESO (CREACIÓN-APROBACIÓN-PAGO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
 
-    7.1. /API-AUTH/Login User Employee  - Logearse con usuario con rol EMPLEADO.
+    7.1. /API-AUTH/Login Employee  - Logearse con usuario con rol EMPLEADO.
+    ![Login Empleado](/Documentacion/Pantallas/01%20Login%20Empleado.png)
 
-[img1]: /Documentacion/Pantallas/01%20Login%20Empleado.png
+    7.2. /API ORCHESTATOR/CREATE ORDER REFUND - Creación de Orden de Reembolso
+    ![Creación Orden Reembolso](/Documentacion/Pantallas/02%20Create%20orden%20Refund.png)
 
-    7.2. /API ORCHESTATOR/CREATE ORDER REFUND
+    7.3. Logs Creación de orden de reembolso.
+    ![Logs Creación Orden de Reembolso](/Documentacion/Pantallas/03%20Logs%20Orcheatator%20Create%20Orden%20Refund.png)
 
-    7.3. /API-AUTH/Login User  -  Logearse con usuario con rol SUPERVISOR.
+    7.4. /API-AUTH/Login Supervisor - Logearse con usuario con rol SUPERVISOR.
+    ![Login Supervisor](/Documentacion/Pantallas/04%20Login%20Supervisor.png)
+
+    7.5. /API ORCHESTATOR/APPROVE ORDER REFUND - Aprobar orden de reembolso (Copiar el código de orden de reembolso generado en la creación)
+    ![Aprobar Orden de Reembolso](/Documentacion/Pantallas/05%20Approve%20Order%20Refund.png)
     
-    7.4. /API ORCHESTATOR/APPROVE ORDER REFUND
+    7.6. Logs Aprobación de orden de reembolso (SAGA - Logs de la ejecución )
+    ![Logs Aprobar Orden de Reembolso](/Documentacion/Pantallas/06%20logs%20Approve%20Order%20Refund.png)
 
-   7.3. /API-AUTH/Login User  -  Logearse con usuario con rol CONTADOR.
+    7.7. /API-AUTH/Login Contador  -  Logearse con usuario con rol CONTADOR.
+    ![Login Empleado](/Documentacion/Pantallas/07%20Login%20User%20Contador.png)
 
-   7.4. /API ORCHESTATOR/PAYMENT ORDER REFUND
+    7.8. /API ORCHESTATOR/PAYMENT ORDER REFUND (Copiar id del pago registrado en el proceso de aprobación)
+    ![Pagar Orden de Pago de Reembolso](/Documentacion/Pantallas/08%20Payment%20Order%20Refund.png)
 
-## microservicios-jpinto-sb-refund-order
-Implementacion de Microservicios para realizar reembolsos a empleados por viaticos en empresa Danec
+    7.9. Logs procesar pago de orden de reembolso.
+    ![Logs proceso de pago](/Documentacion/Pantallas/09%20Logs%20Payment%20Order%20Refund.png)
+
+    7.10. /API QUERY ORDER REFUND - Uso de api de consultas 
+    ![Consulta Orden Pagada](/Documentacion/Pantallas/10%20API%20QUERY%20ORDER%20REFUND.png)
+
+8. PROCESO (CREACIÓN-RECHAZO) (Para ejecutar el flujo, desde postman, ejecutar en el siguiente orden).
+    
+    8.1. /API-AUTH/Login Employee  - Logearse con usuario con rol EMPLEADO.
+        ![Login Empleado](/Documentacion/Pantallas/01%20Login%20Empleado.png)
+
+    8.2. /API ORCHESTATOR/CREATE ORDER REFUND - Creación de Orden de Reembolso
+   ![Creación Orden Reembolso](/Documentacion/Pantallas/11%20Create%20Order%20Reject.png)
+
+   8.3. /API ORCHESTATOR/REJECT ORDER REFUND - Creación de Orden de Reembolso
+   ![Rechazo orden de reembolso](/Documentacion/Pantallas/12%20Reject%20Order%20Refund.png)
+
+    8.4. Logs de rechazo de orden de reembolso.
+   ![Logs Rechazo Orden Reembolso](/Documentacion/Pantallas/13%20Log%20%20Reject%20Order%20Refund.png)

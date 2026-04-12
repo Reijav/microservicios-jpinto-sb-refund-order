@@ -29,3 +29,4 @@ public class CancelPaymentService implements CancelPaymentUseCase {
         return PaymentMapper.toResponse(paymentRepository.save(payment));
     }
 }
+

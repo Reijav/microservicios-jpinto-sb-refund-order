@@ -31,8 +31,6 @@ public class RefundOrderController {
         this.getRefundOrderUseCase = getRefundOrderUseCase;
     }
 
-    // ─── CRUD ────────────────────────────────────────────────────────────────
-
     @PostMapping
     public ResponseEntity<RefundOrderResponse> create(@RequestBody CreateRefundOrderRequest request,@RequestHeader Map<String, String> headers) {
         headers.forEach((key, value) -> {
@@ -53,8 +51,6 @@ public class RefundOrderController {
         return ResponseEntity.ok(getRefundOrderUseCase.getAllRefundOrders());
     }
 
-    // ─── STATE TRANSITIONS ───────────────────────────────────────────────────
-
     @PutMapping("/{id}/approve")
     public ResponseEntity<RefundOrderResponse> approve(@PathVariable UUID id) {
         return ResponseEntity.ok(changeRefundStateUseCase.approveRefund(id));
@@ -66,10 +62,18 @@ public class RefundOrderController {
         return ResponseEntity.ok(changeRefundStateUseCase.rejectRefund(id, request));
     }
 
+    @PutMapping("/{id}/generate-payment-order-compensation")
+    public ResponseEntity<RefundOrderResponse> registerPaymentOrderByCompensation(@PathVariable UUID id, @RequestBody MarkPayRequest request) {
+        return ResponseEntity.ok(changeRefundStateUseCase.registerPaymentOrderByCompensation(id, request));
+    }
+
+
     @PutMapping("/{id}/generate-payment-order")
     public ResponseEntity<RefundOrderResponse> registerPaymentOrder(@PathVariable UUID id, @RequestBody MarkPayRequest request) {
         return ResponseEntity.ok(changeRefundStateUseCase.registerPaymentOrder(id, request));
     }
+
+
 
     @PutMapping("/{id}/mark-as-payed")
     public ResponseEntity<RefundOrderResponse> markAsPayed(@PathVariable UUID id) {

@@ -16,6 +16,8 @@ public interface ChangeRefundStateUseCase {
 
     RefundOrderResponse registerPaymentOrder(UUID refundId, MarkPayRequest request);
 
+    RefundOrderResponse registerPaymentOrderByCompensation(UUID refundId, MarkPayRequest request);
+
     RefundOrderResponse markAsPayed(UUID refundId);
 
     RefundOrderResponse roolbackState(UUID refundId, RefundState rollbackState);

@@ -19,3 +19,5 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.security.access: DEBUG
+produce:
+  error: true

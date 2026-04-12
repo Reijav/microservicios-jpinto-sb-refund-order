@@ -62,11 +62,19 @@ public class Payment {
         if (this.state == PaymentState.CANCELLED) {
             throw new InvalidPaymentStateTransitionException(this.state, PaymentState.CANCELLED);
         }
-        if (this.state == PaymentState.PROCESSED) {
-            throw new InvalidPaymentStateTransitionException(this.state, PaymentState.CANCELLED);
-        }
+//        if (this.state == PaymentState.PROCESSED) {
+//            throw new InvalidPaymentStateTransitionException(this.state, PaymentState.CANCELLED);
+//        }
         this.transactionId=null;
         this.state = PaymentState.CANCELLED;
+    }
+
+    public void revert() {
+        if (this.state == PaymentState.REVERTED) {
+            throw new InvalidPaymentStateTransitionException(this.state, PaymentState.REVERTED);
+        }
+        this.transactionId=null;
+        this.state = PaymentState.REVERTED;
     }
 
     public UUID getId()                  { return id; }
