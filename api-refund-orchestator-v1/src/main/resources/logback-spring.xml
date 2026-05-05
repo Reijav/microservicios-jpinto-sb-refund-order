@@ -1,0 +1,91 @@
+<configuration>
+
+    <!-- ══ Spring property bindings ════════════════════════════════════════ -->
+    <springProperty name="APP_NAME"        source="spring.application.name"                           defaultValue="application"/>
+    <springProperty name="APP_VERSION"     source="spring.application.version"                        defaultValue="unknown"/>
+    <springProperty name="ENVIRONMENT"     source="spring.profiles.active"                            defaultValue="default"/>
+    <springProperty name="LOG_DIR"         source="logging.http.log-dir"                              defaultValue=".log"/>
+    <springProperty name="MAX_HISTORY"     source="logging.logback.rollingpolicy.max-history"         defaultValue="30"/>
+    <springProperty name="MAX_FILE_SIZE"   source="logging.logback.rollingpolicy.max-file-size"       defaultValue="100MB"/>
+    <springProperty name="TOTAL_SIZE_CAP"  source="logging.logback.rollingpolicy.total-size-cap"      defaultValue="3GB"/>
+
+
+    <!-- ── FILE appender ──────────────────────────────────────────────────── -->
+    <appender name="JSON_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_DIR}/${APP_NAME}.log</file>
+        <append>true</append>
+
+        <!-- Daily + size-based rotation with compressed archives -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- e.g. .log/spring-boot-logging-grafana-alloy-loki.2026-03-21.0.log.gz -->
+            <fileNamePattern>${LOG_DIR}/${APP_NAME}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
+            <totalSizeCap>${TOTAL_SIZE_CAP}</totalSizeCap>
+            <!-- Remove stale archives on startup (safe for containers) -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <!--
+              ISO-8601 with nanosecond precision and timezone offset.
+              Example: 2026-03-21T21:27:19.571043105+01:00
+              Uses DateTimeFormatter patterns: S = fractional-second digit.
+            -->
+            <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX</timestampPattern>
+
+            <!-- Rename standard logstash field names to match the spec -->
+            <fieldNames>
+                <timestamp>@timestamp</timestamp>
+                <version>@version</version>
+                <message>message</message>
+                <logger>logger</logger>
+                <thread>thread</thread>
+                <level>level</level>
+                <!-- levelValue is redundant alongside level — exclude it -->
+                <levelValue>[ignore]</levelValue>
+                <stackTrace>error.stack_trace</stackTrace>
+            </fieldNames>
+
+            <customFields>{"application.name":"${APP_NAME}","application.version":"${APP_VERSION}","environment":"${ENVIRONMENT}"}</customFields>
+        </encoder>
+    </appender>
+
+    <!-- ── CONSOLE appender (dev / non-prod profiles only) ────────────────── -->
+    <springProfile name="!prod">
+        <appender name="JSON_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX</timestampPattern>
+                <fieldNames>
+                    <timestamp>@timestamp</timestamp>
+                    <version>@version</version>
+                    <message>message</message>
+                    <logger>logger</logger>
+                    <thread>thread</thread>
+                    <level>level</level>
+                    <levelValue>[ignore]</levelValue>
+                    <stackTrace>error.stack_trace</stackTrace>
+                </fieldNames>
+                <customFields>{"application.name":"${APP_NAME}","application.version":"${APP_VERSION}","environment":"${ENVIRONMENT}"}</customFields>
+            </encoder>
+        </appender>
+    </springProfile>
+
+    <!-- ══ Root loggers per profile ════════════════════════════════════════ -->
+
+    <!-- Production: file only -->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="JSON_FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- Every other profile: file + console -->
+    <springProfile name="!prod">
+        <root level="INFO">
+            <appender-ref ref="JSON_FILE"/>
+            <appender-ref ref="JSON_CONSOLE"/>
+        </root>
+    </springProfile>
+
+</configuration>

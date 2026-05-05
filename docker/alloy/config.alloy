@@ -1,0 +1,107 @@
+// docker/alloy/config.alloy
+
+logging {
+  level  = "info"
+  format = "logfmt"
+}
+
+// ── File discovery ────────────────────────────────────────────────────────────
+
+local.file_match "spring_logs" {
+  path_targets = [{ __path__ = "/var/log/spring/*.log" }]
+  sync_period  = "5s"
+}
+
+loki.source.file "spring_source" {
+  targets       = local.file_match.spring_logs.targets
+  forward_to    = [loki.process.springboot_pipeline.receiver]
+  tail_from_end = true
+}
+
+// ── Processing pipeline ───────────────────────────────────────────────────────
+
+loki.process "springboot_pipeline" {
+  forward_to = [loki.write.grafana_loki.receiver]
+
+  // Stage 1 — Parse the JSON log line
+  // Keys containing "@" or "." use backtick (raw-string) JMESPath expressions.
+  stage.json {
+    expressions = {
+      timestamp           = `"@timestamp"`,
+      level               = "level",
+      logger              = "logger",
+      thread              = "thread",
+      message             = "message",
+      error_stack_trace   = `"error.stack_trace"`,
+
+      application_name    = `"application.name"`,
+      application_version = `"application.version"`,
+      environment         = "environment",
+
+      traceId             = "traceId",
+      correlationId       = "correlationId",
+
+      event_kind          = `"event.kind"`,        // "inbound" | "outbound"
+      http_method         = `"http.method"`,
+      http_url            = `"http.url"`,
+      http_query          = `"http.query"`,
+      http_status         = `"http.status_code"`,
+      http_target         = `"http.target"`,       // full URL — outbound only
+      event_duration      = `"event.duration"`,
+      client_ip           = `"client.ip"`,
+    }
+  }
+
+  // Stage 2 — Low-cardinality fields → Loki stream labels
+  // Each unique label combination = a new stream. Keep this small.
+  stage.labels {
+    values = {
+      level            = "level",            // TRACE/DEBUG/INFO/WARN/ERROR
+      application_name = "application_name", // one value per service
+      environment      = "environment",      // dev/staging/prod
+      event_kind       = "event_kind",       // inbound/outbound
+    }
+  }
+
+  // Stage 3 — High-cardinality fields → structured metadata
+  // Indexed per log line, not per stream. Queryable without stream explosion.
+  // Requires Loki ≥ 2.9 + allow_structured_metadata: true
+  stage.structured_metadata {
+    values = {
+      traceId           = "traceId",
+      correlationId     = "correlationId",
+      logger            = "logger",
+      thread            = "thread",
+      http_method       = "http_method",
+      http_url          = "http_url",
+      http_query        = "http_query",
+      http_status       = "http_status",
+      http_target       = "http_target",
+      event_duration    = "event_duration",
+      client_ip         = "client_ip",
+      error_stack_trace = "error_stack_trace",
+    }
+  }
+
+  // Stage 4 — Set log timestamp from JSON, not ingestion wall-clock time
+  stage.timestamp {
+    source = "timestamp"
+    format = "RFC3339Nano"  // matches yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSSXXX
+  }
+
+  // Stage 5 — Human-readable log line shown in Grafana Explore
+  stage.output {
+    source = "message"  // "HTTP GET /api/books -> 200 (42ms)"
+  }
+}
+
+// ── Loki writer ───────────────────────────────────────────────────────────────
+
+loki.write "grafana_loki" {
+  endpoint {
+    url        = "http://loki:3100/loki/api/v1/push"
+    tenant_id  = "default"
+    batch_wait = "1s"
+    batch_size = "1MB"
+  }
+}

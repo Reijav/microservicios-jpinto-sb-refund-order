@@ -129,6 +129,59 @@ services:
     networks:
       - ms-trabajo-final-jpinto
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - ms-trabajo-final-jpinto
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  loki:
+    image: grafana/loki:latest
+    depends_on:
+      - grafana
+    command: -config.file=/etc/loki/local-config.yaml
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./loki/local-config.yaml:/etc/loki/local-config.yaml
+      - loki-storage:/loki
+    networks:
+      - ms-trabajo-final-jpinto
+
+  alloy:
+    image: grafana/alloy:latest
+    depends_on:
+      - grafana
+    ports:
+      - "12345:12345"
+    command:
+      - run
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ../.log:/var/log/spring            # ← Spring app log directory
+      - ./alloy/config.alloy:/etc/alloy/config.alloy
+    networks:
+      - ms-trabajo-final-jpinto
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - ms-trabajo-final-jpinto
+
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -154,6 +207,7 @@ volumes:
   keycloak_data:
   portainer_data:
   redis_data:
+  loki-storage:
 
 #crear el network de forma manual
 #docker network create ms-trabajo-final-jpinto
